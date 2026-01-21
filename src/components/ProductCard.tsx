@@ -1,0 +1,50 @@
+import type { Product } from "../types/product";
+
+interface ProductCardProps {
+  product: Product;
+  showAddToCart?: boolean;
+}
+
+export default function ProductCard({
+  product,
+  showAddToCart = false,
+}: ProductCardProps) {
+  return (
+    <div className="group cursor-pointer">
+      {/* Image Container */}
+      <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-900 mb-4">
+        {/* Image Placeholder */}
+        <div className="w-full h-full bg-white transition-transform duration-700 group-hover:scale-110" />
+
+        {/* Add to Cart Button */}
+        {showAddToCart && (
+          <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+            <button className="w-full bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 py-3 text-xs font-bold uppercase tracking-widest">
+              Añadir al Carrito
+            </button>
+          </div>
+        )}
+
+        {/* Badge */}
+        {product.badge && (
+          <span className="absolute top-4 left-4 bg-primary text-white px-2 py-1 text-[10px] font-bold uppercase tracking-tighter">
+            {product.badge}
+          </span>
+        )}
+      </div>
+
+      {/* Product Info */}
+      <div className="flex justify-between items-start">
+        <div>
+          <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">
+            {product.brand}
+          </h4>
+          <p className="text-sm font-medium uppercase tracking-tight">
+            {product.name}
+          </p>
+        </div>
+        <p className="text-sm font-bold">${product.price.toFixed(2)}</p>
+      </div>
+    </div>
+  );
+}
