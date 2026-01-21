@@ -1,9 +1,11 @@
+import imagen22 from "../assets/imagen22.jpeg";
+
 export default function Hero() {
   return (
     <header className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-zinc-900">
       {/* Background Image Placeholder */}
-      <div className="absolute inset-0 opacity-60 pointer-events-none">
-        <div className="w-full h-full bg-white" />
+      <div className="absolute inset-0 flex flex-row justify-center pointer-events-none">
+        <img src={imagen22} alt="imagen hero" className="object-cover" />
       </div>
 
       {/* Overlay */}

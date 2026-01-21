@@ -1,9 +1,4 @@
-import type { Product } from "../types/product";
-
-interface ProductCardProps {
-  product: Product;
-  showAddToCart?: boolean;
-}
+import type { ProductCardProps } from "../types/ProductCardProps";
 
 export default function ProductCard({
   product,
@@ -14,7 +9,7 @@ export default function ProductCard({
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-900 mb-4">
         {/* Image Placeholder */}
-        <div className="w-full h-full bg-white transition-transform duration-700 group-hover:scale-110" />
+        <img src={product.image} alt={product.name} />
 
         {/* Add to Cart Button */}
         {showAddToCart && (

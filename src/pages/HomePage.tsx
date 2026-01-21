@@ -3,15 +3,24 @@ import Hero from "../components/Hero";
 import FeaturedProducts from "../components/FeaturedProducts";
 import Footer from "../components/Footer";
 import type { Product } from "../types/product";
+import imagen3 from "../assets/imagen3.jpeg";
+import imagen4 from "../assets/imagen4.jpeg";
+import imagen5 from "../assets/imagen5.jpeg";
+import imagen6 from "../assets/imagen6.jpeg";
+import imagen7 from "../assets/imagen7.jpeg";
+import imagen8 from "../assets/imagen8.jpeg";
+import imagen9 from "../assets/imagen9.jpeg";
+import imagen10 from "../assets/imagen10.jpeg";
+import imagen12 from "../assets/imagen12.jpeg";
 
 // Mock data - Replace with real data later
 const mockProducts: Product[] = [
   {
     id: "1",
-    brand: "Brand Name",
-    name: "Boost 350 V2 'Carbon'",
-    price: 320.0,
-    image: "",
+    brand: "reloj 1",
+    name: "reloj premium",
+    price: 550.0,
+    image: imagen3,
     badge: "Nuevo",
     isFeatured: true,
   },
@@ -20,7 +29,7 @@ const mockProducts: Product[] = [
     brand: "Collaboration",
     name: "Dunk Low 'Pine Green'",
     price: 540.0,
-    image: "",
+    image: imagen4,
     badge: "Destacado",
     isFeatured: true,
   },
@@ -29,7 +38,7 @@ const mockProducts: Product[] = [
     brand: "Essentials",
     name: "Essentials Hoodie 'Moss'",
     price: 180.0,
-    image: "",
+    image: imagen5,
     isFeatured: true,
   },
   {
@@ -37,7 +46,7 @@ const mockProducts: Product[] = [
     brand: "Classic",
     name: "Logo Tee",
     price: 95.0,
-    image: "",
+    image: imagen6,
     isFeatured: false,
   },
   {
@@ -45,7 +54,7 @@ const mockProducts: Product[] = [
     brand: "Iconic",
     name: "Retro 1 'University Blue'",
     price: 480.0,
-    image: "",
+    image: imagen7,
     badge: "Últimas unidades",
     isFeatured: true,
   },
@@ -54,7 +63,7 @@ const mockProducts: Product[] = [
     brand: "Performance",
     name: "Air Max 270 'Red Fury'",
     price: 210.0,
-    image: "",
+    image: imagen8,
     isFeatured: true,
   },
   {
@@ -62,7 +71,7 @@ const mockProducts: Product[] = [
     brand: "Luxury",
     name: "Premium Watch 'Gold Edition'",
     price: 1250.0,
-    image: "",
+    image: imagen9,
     badge: "Destacado",
     isFeatured: true,
   },
@@ -71,7 +80,15 @@ const mockProducts: Product[] = [
     brand: "Street",
     name: "Urban Jacket 'Black'",
     price: 340.0,
-    image: "",
+    image: imagen10,
+    isFeatured: true,
+  },
+  {
+    id: "9",
+    brand: "Street",
+    name: "Urban Jacket 'Black'",
+    price: 340.0,
+    image: imagen12,
     isFeatured: true,
   },
 ];

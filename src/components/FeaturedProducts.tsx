@@ -108,16 +108,6 @@ export default function FeaturedProducts({
           <ProductCard key={product.id} product={product} showAddToCart />
         ))}
       </div>
-
-      {/* CTA Button */}
-      <div className="mt-16 text-center">
-        <a
-          href="/destacados"
-          className="inline-block px-10 py-4 border border-zinc-900 dark:border-zinc-100 text-zinc-900 dark:text-zinc-100 text-xs font-bold uppercase tracking-[0.3em] hover:bg-zinc-900 hover:text-white dark:hover:bg-white dark:hover:text-zinc-900 transition-all duration-300"
-        >
-          Ver todos los destacados
-        </a>
-      </div>
     </section>
   );
 }
