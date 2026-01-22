@@ -78,7 +78,8 @@ export default function Footer() {
         <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-600 font-bold">
           DESARROLLADO POR{" "}
           <a
-            href="#"
+            href="https://neocodesite.me"
+            target="_blank"
             className="text-zinc-600 dark:text-zinc-400 hover:text-primary border-b border-zinc-300 dark:border-zinc-800 hover:border-primary transition-all pb-0.5"
           >
             NEOCODE

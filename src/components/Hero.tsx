@@ -20,7 +20,7 @@ export default function Hero() {
         <p className="text-zinc-300 text-sm md:text-base max-w-xl mx-auto mb-10 font-light tracking-widest mt-6">
           Curaduría exclusiva de alta relojería y sneakers de colección.
         </p>
-        <button className="px-10 py-4 border border-white text-white text-xs font-bold uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all duration-300">
+        <button className="px-10 py-4 border border-white text-white text-xs font-bold uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all duration-300 cursor-pointer">
           VER CATÁLOGO
         </button>
       </div>

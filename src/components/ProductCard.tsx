@@ -14,7 +14,7 @@ export default function ProductCard({
         {/* Add to Cart Button */}
         {showAddToCart && (
           <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-            <button className="w-full bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 py-3 text-xs font-bold uppercase tracking-widest">
+            <button className="w-full bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 py-3 text-xs font-bold uppercase tracking-widest cursor-pointer">
               Añadir al Carrito
             </button>
           </div>
