@@ -109,7 +109,7 @@ export default function LoginPage() {
       {/* Footer */}
       <footer className="w-full mt-20 pb-10 flex justify-center">
         <p className="text-[9px] text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.5em]">
-          Prime Drip Club — 2025
+          Prime Drip Club — 2026
         </p>
       </footer>
     </div>

@@ -1,4 +1,4 @@
-import imagen22 from "../assets/imagen22.jpeg";
+import imagen22 from "../../assets/imagen22.jpeg";
 
 export default function Hero() {
   return (

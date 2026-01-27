@@ -1,7 +1,5 @@
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import FeaturedProducts from "../components/FeaturedProducts";
-import Footer from "../components/Footer";
+import {Header,Footer,Hero} from "../components";
+import { FeaturedProducts } from "../components";
 import type { Product } from "../types/product";
 import imagen3 from "../assets/imagen3.jpeg";
 import imagen4 from "../assets/imagen4.jpeg";

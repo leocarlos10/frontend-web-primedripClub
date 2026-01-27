@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useDarkMode } from "../hooks/useDarkMode";
+import { useDarkMode } from "../../hooks/useDarkMode";
 
 export default function Header() {
   const { isDark, toggleDarkMode } = useDarkMode();
@@ -85,8 +85,8 @@ export default function Header() {
         </div>
 
         {/* acciones */}
-        <div className="flex items-center gap-5 relative group">
-          <div className="flex flex-col justify-center relative group">
+        <div className="flex items-center gap-5 ">
+          <div className=" relative group">
             <button className="hover:text-primary transition-colors flex items-center">
               <span className="material-symbols-outlined text-[22px] cursor-pointer">
                 person

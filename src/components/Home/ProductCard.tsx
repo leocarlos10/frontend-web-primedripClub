@@ -1,4 +1,4 @@
-import type { ProductCardProps } from "../types/ProductCardProps";
+import type { ProductCardProps } from "../../types/ProductCardProps";
 
 export default function ProductCard({
   product,

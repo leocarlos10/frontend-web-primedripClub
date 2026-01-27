@@ -1,5 +1,5 @@
 import ProductCard from "./ProductCard";
-import type { FeaturedProductsProps } from "../types/FeaturedProductsProps";
+import type { FeaturedProductsProps } from "../../types/FeaturedProductsProps";
 
 export default function FeaturedProducts({
   products,
