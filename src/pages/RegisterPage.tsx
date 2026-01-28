@@ -1,5 +1,9 @@
 import { Link } from "react-router";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UsuarioContext } from "../context/Usuario.context";
+import type { ErrorResponse } from "../types/requestType/ErrorResponse";
+import type { Response } from "../types/requestType/Response";
+import type { Usuario } from "../types/requestType/Usuario";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -7,15 +11,35 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const context = useContext(UsuarioContext);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
+    // verificamos que el usuario acepta los términos
     if (!acceptTerms) {
       alert("Debes aceptar los términos y condiciones");
       return;
     }
-    // Aquí implementarás la lógica de registro
-    console.log("Register attempt:", { name, email, password });
+// verificamos que el contexto no sea nulo
+    if(!context) return;
+
+    console.log("Registrando usuario:", { name, email, password });
+// llamamos a la función register del contexto
+   const respuesta = await context.register({
+      nombre: name,
+      email: email,
+      password: password,
+      activo: true,
+      fechaCreacion: new Date().toISOString(),
+    })
+
+    if(respuesta.success){
+      alert("Registro exitoso");
+      console.log("Usuario registrado:", (respuesta as Response<Usuario>).data);
+    } else {
+      alert("Error en el registro: " + (respuesta as ErrorResponse).message);
+    }
+    
   };
 
   return (
@@ -57,7 +81,7 @@ export default function RegisterPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Tu nombre aquí"
-                className="w-full bg-transparent border-b border-zinc-300 dark:border-white/30 focus:border-zinc-900 dark:focus:border-white transition-all duration-300 py-3 px-0 outline-none text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-white/20 uppercase"
+                className="w-full bg-transparent border-b border-zinc-300 dark:border-white/30 focus:border-zinc-900 dark:focus:border-white transition-all duration-300 py-3 px-0 outline-none text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-white/20 "
               />
             </div>
 
@@ -76,7 +100,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="email@ejemplo.com"
-                className="w-full bg-transparent border-b border-zinc-300 dark:border-white/30 focus:border-zinc-900 dark:focus:border-white transition-all duration-300 py-3 px-0 outline-none text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-white/20 uppercase"
+                className="w-full bg-transparent border-b border-zinc-300 dark:border-white/30 focus:border-zinc-900 dark:focus:border-white transition-all duration-300 py-3 px-0 outline-none text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-white/20 "
               />
             </div>
 
@@ -139,7 +163,7 @@ export default function RegisterPage() {
             <div className="pt-4 flex flex-col items-center gap-6">
               <button
                 type="submit"
-                className="w-full bg-zinc-900 dark:bg-white text-white dark:text-black py-4 text-xs uppercase tracking-[0.3em] font-bold hover:bg-zinc-800 dark:hover:bg-gray-200 transition-all"
+                className="w-full bg-zinc-900 dark:bg-white text-white dark:text-black py-4 text-xs uppercase tracking-[0.3em] font-bold hover:bg-zinc-800 dark:hover:bg-gray-200 transition-all cursor-pointer"
               >
                 Crear cuenta
               </button>

@@ -1,0 +1,33 @@
+import type { Options } from "../types/requestType/Options";
+import type { Response } from "../types/requestType/Response";
+import type { ErrorResponse } from "../types/requestType/ErrorResponse";
+import { handleApiResponse } from "./handleApiResponse";
+/**
+ * Realiza una petición HTTP y maneja la respuesta
+ * @param {string} endpoint - Endpoint de la API
+ * @param {Object} options - Opciones de fetch (method, body, etc.)
+ * @returns {Promise<Object>} Respuesta estandarizada
+ */
+export const ApiRequest = async <T = any, B = any>(
+  endpoint: string,
+  options: Options<B>,
+): Promise<Response<T> | ErrorResponse> => {
+  try {
+    // el segundo parametro del fetch espera un RequestInit
+    const request = await fetch(endpoint, {
+      method: options.method,
+      headers: options.headers,
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    });
+
+    return await handleApiResponse<T>(request);
+  } catch (error) {
+    return {
+      timestamp: new Date().toISOString(),
+      status: 0,
+      error: "NETWORK_ERROR",
+      message: error instanceof Error ? error.message : "Error de conexión",
+      path: endpoint,
+    } as ErrorResponse;
+  }
+};

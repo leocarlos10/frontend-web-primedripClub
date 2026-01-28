@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState} from "react";
 import type { ReactNode } from "react";
-import type { DarkModeContextType } from "../types/DarkModeContextType";
+import type { DarkModeContextType } from "../types/ContextType/DarkModeContextType";
 
 const DarkModeContext = createContext<DarkModeContextType | undefined>(undefined);
 
