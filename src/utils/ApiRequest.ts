@@ -18,6 +18,7 @@ export const ApiRequest = async <T = any, B = any>(
       method: options.method,
       headers: options.headers,
       body: options.body ? JSON.stringify(options.body) : undefined,
+      mode: "cors",
     });
 
     return await handleApiResponse<T>(request);

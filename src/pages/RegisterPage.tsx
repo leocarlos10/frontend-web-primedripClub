@@ -1,9 +1,10 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useContext, useState } from "react";
 import { UsuarioContext } from "../context/Usuario.context";
 import type { ErrorResponse } from "../types/requestType/ErrorResponse";
 import type { Response } from "../types/requestType/Response";
 import type { Usuario } from "../types/requestType/Usuario";
+import { useToast } from "../hooks/useToast";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -12,34 +13,40 @@ export default function RegisterPage() {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const context = useContext(UsuarioContext);
+  const { showToast } = useToast();
+  const navigate = useNavigate();
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  // Manejador del envío del formulario
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // verificamos que el usuario acepta los términos
     if (!acceptTerms) {
-      alert("Debes aceptar los términos y condiciones");
+      showToast("Debes aceptar los términos y condiciones", "warning");
       return;
     }
-// verificamos que el contexto no sea nulo
-    if(!context) return;
+    // verificamos que el contexto no sea nulo
+    if (!context) return;
 
     console.log("Registrando usuario:", { name, email, password });
-// llamamos a la función register del contexto
-   const respuesta = await context.register({
+    // llamamos a la función register del contexto
+    const respuesta = await context.register({
       nombre: name,
       email: email,
       password: password,
       activo: true,
       fechaCreacion: new Date().toISOString(),
-    })
+    });
 
-    if(respuesta.success){
-      alert("Registro exitoso");
+    if (respuesta.success) {
+      showToast("Registro exitoso", "success");
       console.log("Usuario registrado:", (respuesta as Response<Usuario>).data);
+      navigate("/login");
     } else {
-      alert("Error en el registro: " + (respuesta as ErrorResponse).message);
+      showToast(
+        "Error en el registro: " + (respuesta as ErrorResponse).message,
+        "error",
+      );
     }
-    
   };
 
   return (

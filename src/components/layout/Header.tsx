@@ -1,9 +1,10 @@
 import { Link } from "react-router";
 import { useDarkMode } from "../../hooks/useDarkMode";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Header() {
   const { isDark, toggleDarkMode } = useDarkMode();
-  const sesion = false;
+  const {user,isAuthenticated, logout} = useAuth();
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
@@ -96,9 +97,9 @@ export default function Header() {
             <div className="absolute top-full left-0 pt-4 hidden group-hover:block">
               <ul className="bg-white dark:bg-zinc-900 border rounded-[10px] border-zinc-200 dark:border-zinc-800 p-2.5 min-w-40 max-w-42 shadow-2xl">
                 <li className="px-2 py-1 border-b border-zinc-200 dark:border-zinc-800 mb-2">
-                  {sesion ? (
+                  {isAuthenticated ? (
                     <span className="text-[11px] wrap-break-word line-clamp-2">
-                      leocarlosospinacausil10@gmail.com
+                      {user ? user.email : "Usuario"}
                     </span>
                   ) : (
                     <span className="flex flex-col gap-1 text-[11px]">
@@ -124,7 +125,10 @@ export default function Header() {
                   </Link>
                 </li>
                 <li className="py-2">
-                  <button className="text-[11px] uppercase tracking-widest hover:text-red-500 block px-2 py-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer">
+                  <button 
+                  className="text-[11px] uppercase tracking-widest hover:text-red-500 block px-2 py-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  onClick={logout}
+                  >
                     cerrar sesión
                   </button>
                 </li>

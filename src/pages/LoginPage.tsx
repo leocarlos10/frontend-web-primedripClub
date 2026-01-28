@@ -1,15 +1,59 @@
-import { Link } from "react-router";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { useContext, useState } from "react";
+import { UsuarioContext } from "../context/Usuario.context";
+import { useToast } from "../hooks/useToast";
+import type { Response } from "../types/requestType/Response";
+import type { LoginResponse } from "../types/requestType/LoginResponse";
+import type { ErrorResponse } from "../types/requestType/ErrorResponse";
+import { SaveinfoLogin } from "../utils/SaveinfoLogin";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const context = useContext(UsuarioContext);
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+  const {refreshAuth} = useAuth();
+  // Manejador del envío del formulario
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aquí implementarás la lógica de autenticación
-    console.log("Login attempt:", { email, password });
+
+    if (!context) return;
+
+    console.log("Iniciando sesión con:", { email, password });
+
+    const respuesta = await context.login({
+      email: email,
+      password: password,
+    });
+
+
+    if (respuesta.success) {
+      showToast(
+        `Bienvenido ${(respuesta as Response<LoginResponse>).data.nombre}`,
+        "success",
+      );
+      if (
+        (respuesta as Response<LoginResponse>).data.roles.includes("ROLE_ADMIN")
+      ) {
+        // primero se guarda la info en sessionStorage
+        SaveinfoLogin((respuesta as Response<LoginResponse>).data);
+        refreshAuth();
+        setTimeout(() => navigate("/dashboard"),2000);
+      } else {
+        // primero se guarda la info en sessionStorage
+        SaveinfoLogin((respuesta as Response<LoginResponse>).data);
+        refreshAuth();
+        setTimeout(() => navigate("/"),2000);
+      }
+    } else {
+      showToast(
+        "No se pudo iniciar sesión: " + (respuesta as ErrorResponse).message,
+        "error",
+      );
+    }
   };
 
   return (
@@ -91,7 +135,7 @@ export default function LoginPage() {
             <div className="pt-4 flex flex-col items-center gap-6">
               <button
                 type="submit"
-                className="w-full bg-zinc-900 dark:bg-white text-white dark:text-black py-4 text-xs uppercase tracking-[0.3em] font-bold hover:bg-zinc-800 dark:hover:bg-gray-200 transition-all"
+                className="w-full bg-zinc-900 dark:bg-white text-white dark:text-black py-4 text-xs uppercase tracking-[0.3em] font-bold hover:bg-zinc-800 dark:hover:bg-gray-200 transition-all cursor-pointer"
               >
                 Autenticar
               </button>

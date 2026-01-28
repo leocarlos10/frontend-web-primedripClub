@@ -4,21 +4,24 @@ import url_backend from "../Config";
 import { getHeaders } from "../utils/Headers";
 import type { Usuario } from "../types/requestType/Usuario";
 import type { UsuarioContextType } from "../types/ContextType/UsuarioContextType";
+import type { LoginRequest } from "../types/requestType/LoginRequest";
+import type { LoginResponse } from "../types/requestType/LoginResponse";
 
 const UsuarioContext = createContext<UsuarioContextType | null>(null);
 
 function UsuarioProvider({ children }: { children: ReactNode }) {
-  const login = async (usuario: Usuario) => {
-      const respueta = await ApiRequest<Usuario, Usuario>(
+ 
+  const login = async (request: LoginRequest) => {
+      const respuesta = await ApiRequest<LoginResponse, LoginRequest>(
         `${url_backend}/auth/login`,
         {
           method: "POST",
           headers: getHeaders(),
-          body: usuario,
+          body: request,
         },
       );
 
-    return respueta;
+    return respuesta;
 
   };
 
