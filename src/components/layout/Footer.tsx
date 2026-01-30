@@ -1,50 +1,44 @@
 export default function Footer() {
   return (
     <footer className="bg-zinc-50 dark:bg-background-dark text-zinc-900 dark:text-white border-t border-zinc-200 dark:border-zinc-900 pt-32 pb-16">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-24 mb-32">
-        {/* Soporte */}
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-24 mb-32">
+        {/* Catálogo */}
         <div>
           <h4 className="text-[11px] font-extrabold uppercase tracking-[0.3em] text-zinc-400 dark:text-zinc-500 mb-10">
-            Soporte
+            Catálogo
           </h4>
           <ul className="space-y-4 text-[13px] font-medium tracking-wide">
             <li>
               <a href="#" className="hover:text-primary transition-colors">
-                FAQ
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-primary transition-colors">
-                Envíos
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-primary transition-colors">
-                Devoluciones
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-primary transition-colors">
-                Contacto (Email/WhatsApp)
+                Ver Productos
               </a>
             </li>
           </ul>
         </div>
 
-        {/* Pedidos */}
+        {/* Envíos */}
         <div>
           <h4 className="text-[11px] font-extrabold uppercase tracking-[0.3em] text-zinc-400 dark:text-zinc-500 mb-10">
-            Pedidos
+            Envíos
           </h4>
           <ul className="space-y-4 text-[13px] font-medium tracking-wide">
             <li>
               <a href="#" className="hover:text-primary transition-colors">
-                Rastrear pedido
+                Información de Envíos
               </a>
             </li>
+          </ul>
+        </div>
+
+        {/* Contacto */}
+        <div>
+          <h4 className="text-[11px] font-extrabold uppercase tracking-[0.3em] text-zinc-400 dark:text-zinc-500 mb-10">
+            Contacto
+          </h4>
+          <ul className="space-y-4 text-[13px] font-medium tracking-wide">
             <li>
               <a href="#" className="hover:text-primary transition-colors">
-                Mi cuenta
+                Email/WhatsApp
               </a>
             </li>
           </ul>
