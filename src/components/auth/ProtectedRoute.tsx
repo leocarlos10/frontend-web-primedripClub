@@ -1,7 +1,7 @@
 import { Navigate } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 import LoadingSpinner from "../common/LoadingSpinner";
-import type { ProtectedRouteProps } from "../../types/ProtectedRouteprops";
+import type { ProtectedRouteProps } from "../../types/TypeProps/ProtectedRouteprops";
 
 
 /**

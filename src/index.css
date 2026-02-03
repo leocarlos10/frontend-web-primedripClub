@@ -21,7 +21,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.hide-scrollbar::-webkit-scrollbar {
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
@@ -29,6 +30,8 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+}
+
 
 @keyframes slideIn {
   from {

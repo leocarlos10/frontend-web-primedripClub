@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, type ReactNode } from "react";
 import type { AuthContextType } from "../types/ContextType/AuthContextType";
-import type { LoginResponse } from "../types/requestType/LoginResponse";
+import type { LoginResponse } from "../types/requestType/usuario/LoginResponse";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -26,8 +26,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         // Verificar si el usuario tiene rol de admin
         const hasAdminRole = parsedInfo.roles?.some(
-          (role: string) =>
-            role === "ROLE_ADMIN",
+          (role: string) => role === "ROLE_ADMIN",
         );
         setIsAdmin(hasAdminRole);
       } catch (error) {

@@ -7,6 +7,8 @@ import { BrowserRouter } from "react-router";
 import { UsuarioProvider } from "./context/Usuario.context.tsx";
 import { ToastProvider } from "./context/Toast.context.tsx";
 import { AuthProvider } from "./context/Auth.context.tsx";
+import { ProductoProvider } from "./context/Producto.Context.tsx";
+import { CategoriaProvider } from "./context/CategoriaContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -15,7 +17,11 @@ createRoot(document.getElementById("root")!).render(
         <DarkModeProvider>
           <UsuarioProvider>
             <AuthProvider>
-              <App />
+              <ProductoProvider>
+                <CategoriaProvider>
+                  <App />
+                </CategoriaProvider>
+              </ProductoProvider>
             </AuthProvider>
           </UsuarioProvider>
         </DarkModeProvider>

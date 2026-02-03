@@ -1,4 +1,4 @@
-import type { ProductCardProps } from "../../types/ProductCardProps";
+import type { ProductCardProps } from "../../types/TypeProps/ProductCardProps";
 
 export default function ProductCard({
   product,
@@ -9,7 +9,7 @@ export default function ProductCard({
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-900 mb-4">
         {/* Image Placeholder */}
-        <img src={product.image} alt={product.name} />
+        <img src={product.imagenUrl} alt={` imagen del producto ${product.nombre}`} />
 
         {/* Add to Cart Button */}
         {showAddToCart && (
@@ -32,13 +32,13 @@ export default function ProductCard({
       <div className="flex justify-between items-start">
         <div>
           <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">
-            {product.brand}
+            {product.marca}
           </h4>
           <p className="text-sm font-medium uppercase tracking-tight">
-            {product.name}
+            {product.nombre}
           </p>
         </div>
-        <p className="text-sm font-bold">${product.price.toFixed(2)}</p>
+        <p className="text-sm font-bold">${product.precio.toFixed(2)}</p>
       </div>
     </div>
   );

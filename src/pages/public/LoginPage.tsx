@@ -1,12 +1,12 @@
 import { Link, useNavigate } from "react-router";
 import { useContext, useState } from "react";
-import { UsuarioContext } from "../context/Usuario.context";
-import { useToast } from "../hooks/useToast";
-import type { Response } from "../types/requestType/Response";
-import type { LoginResponse } from "../types/requestType/LoginResponse";
-import type { ErrorResponse } from "../types/requestType/ErrorResponse";
-import { SaveinfoLogin } from "../utils/SaveinfoLogin";
-import { useAuth } from "../hooks/useAuth";
+import { UsuarioContext } from "../../context/Usuario.context";
+import { useToast } from "../../hooks/useToast";
+import type { Response } from "../../types/requestType/common/Response";
+import type { LoginResponse } from "../../types/requestType/usuario/LoginResponse";
+import type { ErrorResponse } from "../../types/requestType/common/ErrorResponse";
+import { SaveinfoLogin } from "../../utils/SaveinfoLogin";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ export default function LoginPage() {
   const context = useContext(UsuarioContext);
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const {refreshAuth} = useAuth();
+  const { refreshAuth } = useAuth();
   // Manejador del envío del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +29,6 @@ export default function LoginPage() {
       password: password,
     });
 
-
     if (respuesta.success) {
       showToast(
         `Bienvenido ${(respuesta as Response<LoginResponse>).data.nombre}`,
@@ -41,12 +40,12 @@ export default function LoginPage() {
         // primero se guarda la info en sessionStorage
         SaveinfoLogin((respuesta as Response<LoginResponse>).data);
         refreshAuth();
-        setTimeout(() => navigate("/dashboard"),2000);
+        setTimeout(() => navigate("/dashboard"), 2000);
       } else {
         // primero se guarda la info en sessionStorage
         SaveinfoLogin((respuesta as Response<LoginResponse>).data);
         refreshAuth();
-        setTimeout(() => navigate("/"),2000);
+        setTimeout(() => navigate("/"), 2000);
       }
     } else {
       showToast(

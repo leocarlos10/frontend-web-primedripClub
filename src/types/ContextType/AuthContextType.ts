@@ -1,4 +1,4 @@
-import type { LoginResponse } from "../requestType/LoginResponse";
+import type { LoginResponse } from "../requestType/usuario/LoginResponse";
 
 export type AuthContextType = {
   user: LoginResponse | null;

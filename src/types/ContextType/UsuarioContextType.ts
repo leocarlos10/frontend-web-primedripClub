@@ -1,10 +1,12 @@
-import type { ErrorResponse } from "../requestType/ErrorResponse";
-import type { Response } from "../requestType/Response";
+import type { ErrorResponse } from "../requestType/common/ErrorResponse";
+import type { Response } from "../requestType/common/Response";
 import type { Usuario } from "../requestType/Usuario";
-import type { LoginRequest } from "../requestType/LoginRequest";
-import type { LoginResponse } from "../requestType/LoginResponse";
+import type { LoginRequest } from "../requestType/usuario/LoginRequest";
+import type { LoginResponse } from "../requestType/usuario/LoginResponse";
 
 export type UsuarioContextType = {
-  login: (request: LoginRequest) => Promise<Response<LoginResponse> | ErrorResponse>;
+  login: (
+    request: LoginRequest,
+  ) => Promise<Response<LoginResponse> | ErrorResponse>;
   register: (usuario: Usuario) => Promise<Response<Usuario> | ErrorResponse>;
 };
