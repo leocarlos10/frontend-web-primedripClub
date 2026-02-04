@@ -8,11 +8,13 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 import ProductosPage from "../pages/Private/ProductosPage";
 import PedidosPage from "../pages/Private/PedidosPage";
 import VentasPage from "../pages/Private/VentasPage";
+import CatalogPage from "../pages/public/CatalogPage";
 
 export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Homepage />} />
+      <Route path="/catalogo" element={<CatalogPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />

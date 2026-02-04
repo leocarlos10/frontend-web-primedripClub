@@ -14,6 +14,7 @@ import { useToast } from "../../hooks/useToast";
 import type { Response } from "../../types/requestType/common/Response";
 import type { ProductoResponse } from "../../types/requestType/producto/ProductoResponse";
 import type { ErrorResponse } from "../../types/requestType/common/ErrorResponse";
+import type { ProductUpdateData } from "../../types/product";
 
 export default function ProductosPage() {
   const [products, setProducts] = useState<ProductoResponse[]>([]);
@@ -23,7 +24,8 @@ export default function ProductosPage() {
     null,
   );
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
-  const { guardarProducto, obtenerProductos } = useProducto();
+  const { guardarProducto, obtenerProductos, actualizarProductos, eliminarProducto } =
+    useProducto();
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -38,7 +40,7 @@ export default function ProductosPage() {
       setError(false);
       const respuesta = await obtenerProductos();
 
-      if (respuesta.success ) {
+      if (respuesta.success) {
         setProducts((respuesta as Response<ProductoResponse[]>).data);
       } else {
         setError(true);
@@ -108,9 +110,19 @@ export default function ProductosPage() {
     }
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     console.log("Eliminar producto:", id);
-    // Aquí irá la lógica para eliminar con confirmación
+    const respuesta = await eliminarProducto(id);
+
+    if (respuesta.success) {
+      setProducts((prevProducts) =>
+        prevProducts.filter((prod) => prod.id !== id),
+      );
+      showToast((respuesta as Response<boolean>).message, "success");
+    } else {
+      showToast((respuesta as ErrorResponse).message, "error");
+    }
+
   };
 
   const handleCreateProduct = () => {
@@ -140,11 +152,28 @@ export default function ProductosPage() {
       }
     } else if (dialogMode === "edit" && editingProduct) {
       // Actualizar producto existente
-      setProducts(
-        products.map((p) =>
-          p.id === editingProduct.id ? { ...p, ...productData } : p,
-        ),
-      );
+      // creamos un nuevo producto de tipo ProductUpdateData
+      const updatedProduct: ProductUpdateData = {
+        id: editingProduct.id,
+        ...productData,
+      };
+
+      console.log("Actualizar producto:", updatedProduct);
+      const respuesta = await actualizarProductos(updatedProduct);
+
+      if (respuesta.success) {
+        setProducts((prevProducts) =>
+          prevProducts.map((prod) =>
+            prod.id === updatedProduct.id
+              ? (respuesta as Response<ProductoResponse>).data
+              : prod,
+          ),
+        );
+        showToast((respuesta as Response<ProductoResponse>).message, "success");
+        setIsDialogOpen(false);
+      } else {
+        showToast((respuesta as ErrorResponse).message, "error");
+      }
     }
   };
 
@@ -205,6 +234,12 @@ export default function ProductosPage() {
                   </th>
                   <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
                     Stock
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
+                    Etiqueta
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
+                    Sexo
                   </th>
                   <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
                     Estado

@@ -1,16 +1,21 @@
-import { Header, Footer, Hero } from "../../components";
+import {  Hero, PublicLayout } from "../../components";
 import { FeaturedProducts } from "../../components";
-import { mockProducts } from "../../utils/mocks";
+import { useProductosActivos } from "../../hooks/useProductosActivos";
 
 
 
 export default function HomePage() {
+
+  const {productos,isLoading,error,refetch} = useProductosActivos();
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-zinc-100 transition-colors duration-300">
-      <Header />
+    <PublicLayout>
       <Hero />
-      <FeaturedProducts products={mockProducts} />
-      <Footer />
-    </div>
+      <FeaturedProducts 
+      products={productos}
+      isLoading={isLoading}
+      error={error || undefined}
+      onRetry={refetch}
+      />
+    </PublicLayout>
   );
 }

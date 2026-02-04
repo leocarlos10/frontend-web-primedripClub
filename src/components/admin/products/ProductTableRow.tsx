@@ -1,9 +1,8 @@
-import { url_backend, url_backend_image } from "../../../Config";
+import { url_backend_image } from "../../../Config";
 import type { ProductTableRowProps } from "../../../types/TypeProps/ProductTableRowProps";
 
 function ProductTableRow(props: ProductTableRowProps) {
-  const { product, id, onEdit, onDelete, getStockColor, getStatusDisplay } =
-    props;
+  const { product, id, onEdit, onDelete, getStockColor, getStatusDisplay } = props;
   const statusInfo = getStatusDisplay(product.activo, product.stock);
 
   return (
@@ -38,6 +37,28 @@ function ProductTableRow(props: ProductTableRowProps) {
         <span className={`px-2.5 py-1 rounded ${getStockColor(product.stock)}`}>
           {product.stock} unidades
         </span>
+      </td>
+      <td className="px-6 py-4">
+        {(product as any).etiqueta ? (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400">
+            {(product as any).etiqueta}
+          </span>
+        ) : (
+          <span className="text-xs text-neutral-400 dark:text-neutral-600 italic">
+            Sin etiqueta
+          </span>
+        )}
+      </td>
+      <td className="px-6 py-4">
+        {(product as any).sexo ? (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400">
+            {(product as any).sexo}
+          </span>
+        ) : (
+          <span className="text-xs text-neutral-400 dark:text-neutral-600 italic">
+            No especificado
+          </span>
+        )}
       </td>
       <td className="px-6 py-4">
         <span

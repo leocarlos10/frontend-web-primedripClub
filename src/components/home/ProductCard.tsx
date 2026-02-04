@@ -1,3 +1,4 @@
+import { url_backend_image } from "../../Config";
 import type { ProductCardProps } from "../../types/TypeProps/ProductCardProps";
 
 export default function ProductCard({
@@ -7,9 +8,13 @@ export default function ProductCard({
   return (
     <div className="group cursor-pointer">
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-900 mb-4">
+      <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-900 mb-4 rounded-lg">
         {/* Image Placeholder */}
-        <img src={product.imagenUrl} alt={` imagen del producto ${product.nombre}`} />
+        <img
+          src={`${url_backend_image}${product.imagenUrl}`}
+          alt={`imagen del producto ${product.nombre}`}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
 
         {/* Add to Cart Button */}
         {showAddToCart && (
@@ -21,9 +26,9 @@ export default function ProductCard({
         )}
 
         {/* Badge */}
-        {product.badge && (
+        {product.etiqueta && (
           <span className="absolute top-4 left-4 bg-primary text-white px-2 py-1 text-[10px] font-bold uppercase tracking-tighter">
-            {product.badge}
+            {product.etiqueta}
           </span>
         )}
       </div>
@@ -38,7 +43,12 @@ export default function ProductCard({
             {product.nombre}
           </p>
         </div>
-        <p className="text-sm font-bold">${product.precio.toFixed(2)}</p>
+        <p className="text-sm font-bold">
+          {product.precio.toLocaleString("es-CO", {
+            minimumFractionDigits: 0,
+          })}{" "}
+          <span className="text-xs text-zinc-500">COP</span>
+        </p>
       </div>
     </div>
   );

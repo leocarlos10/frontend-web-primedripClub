@@ -4,9 +4,11 @@ import type { ErrorResponse } from "../types/requestType/common/ErrorResponse";
 import { handleApiResponse } from "./handleApiResponse";
 /**
  * Realiza una petición HTTP y maneja la respuesta
+ * @template T - Tipo de datos de la respuesta esperada
+ * @template B - Tipo de datos del body/payload que se envía en la petición
  * @param {string} endpoint - Endpoint de la API
  * @param {Object} options - Opciones de fetch (method, body, etc.)
- * @returns {Promise<Object>} Respuesta estandarizada
+ * @returns {Promise<Response<T> | ErrorResponse>} Respuesta estandarizada
  */
 export const ApiRequest = async <T = any, B = any>(
   endpoint: string,

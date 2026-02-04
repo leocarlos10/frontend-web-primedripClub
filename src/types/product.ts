@@ -1,13 +1,5 @@
+export type SexoProducto = "Hombre" | "Mujer" | "Niño" | "Unisex";
 
-/* 
-    id: 1,
-    brand: "reloj 1",
-    nombre: "reloj premium",
-    precio: 550.0,
-    imagenUrl: imagen3,
-    badge: "Nuevo",
-    isFeatured: true,
-*/
 export interface ProductBase {
   id: number;
   nombre: string;
@@ -18,26 +10,36 @@ export interface ProductBase {
   imagenUrl: string;
   activo: boolean;
   categoriaId: number;
+  sexo?: SexoProducto | null;
   fechaCreacion: string;
 }
 
 export interface CatalogProduct extends ProductBase {
-  badge?:
-    | "Sold Out"
-    | "New"
-    | "Sale"
-    | "Destacado"
+  etiqueta?:
+    | "Agotado"
     | "Nuevo"
-    | "Últimas unidades";
+    | "Oferta"
+    | "Destacado"
+    | "Últimas unidades"
+    | null;
+  sexo?: SexoProducto | null;
   isFeatured?: boolean;
 }
 
 // tipo para crear/editar productos Omit excluye las propiedades de id y fechaCreacion
-export type ProductFormData = Omit<ProductBase, "id" | "fechaCreacion">;
+export type ProductFormData = Omit<ProductBase, "id" | "fechaCreacion"> & {
+  etiqueta?:
+    | "Agotado"
+    | "Nuevo"
+    | "Oferta"
+    | "Destacado"
+    | "Últimas unidades"
+    | null;
+  sexo?: SexoProducto | null;
+  isFeatured?: boolean;
+};
 
 // tipo para guardar actualizaciones de productos Partial hace todas las propiedades opcionales y agrega un id requerido.
-export type ProductUpdateData = Partial<ProductFormData> & {id: number};
+export type ProductUpdateData = Partial<ProductFormData> & { id: number };
 
 export type SortOption = "newest" | "price-asc" | "price-desc";
-
-

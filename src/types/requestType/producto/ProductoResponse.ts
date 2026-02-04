@@ -12,5 +12,14 @@ export interface ProductoResponse {
   activo: boolean;
   categoriaId: number;
   categoriaNombre: string;
-  fechaCreacion: string; 
+  etiqueta?:
+    | "Agotado"
+    | "Nuevo"
+    | "Oferta"
+    | "Destacado"
+    | "Últimas unidades"
+    | null;
+  sexo?: "Hombre" | "Mujer" | "Niño" | "Unisex" | null;
+  isFeatured?: boolean;
+  fechaCreacion: string;
 }

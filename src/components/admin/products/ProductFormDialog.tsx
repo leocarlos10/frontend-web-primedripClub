@@ -13,6 +13,7 @@ import { useToast } from "../../../hooks/useToast";
 import { useCategoria } from "../../../hooks/useCategoria";
 import type { CategoriaResponse } from "../../../types/requestType/categoria/CategoriaResponse";
 import type { Response } from "../../../types/requestType/common/Response";
+import { url_backend_image } from "../../../Config";
 
 export default function ProductFormDialog({
   isOpen,
@@ -38,6 +39,9 @@ export default function ProductFormDialog({
     imagenUrl: "",
     activo: true,
     categoriaId: 0,
+    etiqueta: null,
+    sexo: null,
+    isFeatured: false,
   });
 
   const [errors, setErrors] = useState<
@@ -54,17 +58,37 @@ export default function ProductFormDialog({
     if (isOpen) {
       dialog.showModal();
       cargarCategorias();
+      // Cargar datos del producto si está en modo edición
+      if (product && mode === "edit") {
+        setFormData({
+          nombre: product.nombre,
+          descripcion: product.descripcion,
+          precio: product.precio,
+          stock: product.stock,
+          marca: product.marca,
+          imagenUrl: product.imagenUrl,
+          activo: product.activo,
+          categoriaId: product.categoriaId,
+          etiqueta: (product as any).etiqueta || null,
+          sexo: (product as any).sexo || null,
+          isFeatured: (product as any).isFeatured || false,
+        });
+        setImagePreview(`${url_backend_image}${product.imagenUrl}`);
+      } else {
+        resetForm();
+      }
     } else {
       dialog.close();
+      resetForm();
     }
-  }, [isOpen]);
+  }, [isOpen, product, mode]);
 
   const cargarCategorias = async () => {
     try {
       setLoadingCategorias(true);
       const respuesta = await obtenerCategorias();
 
-      if (respuesta.success ) {
+      if (respuesta.success) {
         setCategorias((respuesta as Response<CategoriaResponse[]>).data);
       } else {
         showToast("Error al cargar categorías", "error");
@@ -77,24 +101,6 @@ export default function ProductFormDialog({
     }
   };
 
-  useEffect(() => {
-    if (product && mode === "edit") {
-      setFormData({
-        nombre: product.nombre,
-        descripcion: product.descripcion,
-        precio: product.precio,
-        stock: product.stock,
-        marca: product.marca,
-        imagenUrl: product.imagenUrl,
-        activo: product.activo,
-        categoriaId: product.categoriaId,
-      });
-      setImagePreview(product.imagenUrl);
-    } else {
-      resetForm();
-    }
-  }, [product, mode]);
-
   const resetForm = () => {
     setFormData({
       nombre: "",
@@ -105,6 +111,9 @@ export default function ProductFormDialog({
       imagenUrl: "",
       activo: true,
       categoriaId: 0,
+      etiqueta: null,
+      sexo: null,
+      isFeatured: false,
     });
     setErrors({});
     setImagePreview("");
@@ -486,23 +495,100 @@ export default function ProductFormDialog({
           </div>
         </div>
 
-        {/* Estado Activo */}
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            id="activo"
-            checked={formData.activo}
-            onChange={(e) =>
-              setFormData({ ...formData, activo: e.target.checked })
-            }
-            className="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded focus:ring-primary dark:bg-zinc-800 dark:border-zinc-700"
-          />
-          <label
-            htmlFor="activo"
-            className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
-          >
-            Producto activo
-          </label>
+        {/* Etiqueta y Sexo */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              Etiqueta (Opcional)
+            </label>
+            <select
+              value={formData.etiqueta || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  etiqueta:
+                    e.target.value === "" ? null : (e.target.value as any),
+                })
+              }
+              className="w-full px-4 py-2 bg-neutral-50 dark:bg-zinc-800 border
+               border-neutral-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2
+                focus:ring-primary focus:border-transparent outline-none transition-all 
+                dark:text-white cursor-pointer"
+            >
+              <option value="">Sin etiqueta</option>
+              <option value="Agotado">Agotado</option>
+              <option value="Nuevo">Nuevo</option>
+              <option value="Oferta">Oferta</option>
+              <option value="Destacado">Destacado</option>
+              <option value="Últimas unidades">Últimas unidades</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              Sexo/Género (Opcional)
+            </label>
+            <select
+              value={formData.sexo || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  sexo: e.target.value === "" ? null : (e.target.value as any),
+                })
+              }
+              className="w-full px-4 py-2 bg-neutral-50 dark:bg-zinc-800 border
+               border-neutral-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2
+                focus:ring-primary focus:border-transparent outline-none transition-all 
+                dark:text-white cursor-pointer"
+            >
+              <option value="">Seleccionar</option>
+              <option value="Hombre">Hombre</option>
+              <option value="Mujer">Mujer</option>
+              <option value="Niño">Niño</option>
+              <option value="Unisex">Unisex</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Estado Activo y Producto Destacado */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="activo"
+              checked={formData.activo}
+              onChange={(e) =>
+                setFormData({ ...formData, activo: e.target.checked })
+              }
+              className="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded 
+              focus:ring-primary dark:bg-zinc-800 dark:border-zinc-700 cursor-pointer"
+            />
+            <label
+              htmlFor="activo"
+              className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+            >
+              Producto activo
+            </label>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="isFeatured"
+              checked={formData.isFeatured || false}
+              onChange={(e) =>
+                setFormData({ ...formData, isFeatured: e.target.checked })
+              }
+              className="w-4 h-4 text-primary bg-neutral-100 border-neutral-300 rounded 
+              focus:ring-primary dark:bg-zinc-800 dark:border-zinc-700 cursor-pointer"
+            />
+            <label
+              htmlFor="isFeatured"
+              className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+            >
+              Producto destacado
+            </label>
+          </div>
         </div>
 
         {/* Botones */}
@@ -510,13 +596,15 @@ export default function ProductFormDialog({
           <button
             type="button"
             onClick={handleCancel}
-            className="px-6 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
+            className="px-6 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 
+            hover:bg-neutral-100 dark:hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
           >
             Cancelar
           </button>
           <button
             type="submit"
-            className="px-6 py-2 text-sm font-bold bg-black dark:bg-white text-white dark:text-black rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
+            className="px-6 py-2 text-sm font-bold bg-black dark:bg-white text-white 
+            dark:text-black rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
           >
             {mode === "create" ? "Crear Producto" : "Guardar Cambios"}
           </button>

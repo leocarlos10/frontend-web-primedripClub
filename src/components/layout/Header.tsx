@@ -1,76 +1,121 @@
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { useDarkMode } from "../../hooks/useDarkMode";
 import { useAuth } from "../../hooks/useAuth";
+import { useCategoria } from "../../hooks/useCategoria";
+import { useState, useEffect } from "react";
+import type { CategoriaResponse } from "../../types/requestType/categoria/CategoriaResponse";
+import type { Response } from "../../types/requestType/common/Response";
 
 export default function Header() {
   const { isDark, toggleDarkMode } = useDarkMode();
-  const {user,isAuthenticated,isAdmin, logout} = useAuth();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
+  const { obtenerCategorias } = useCategoria();
+  const [categorias, setCategorias] = useState<CategoriaResponse[]>([]);
+  const [searchParams] = useSearchParams();
+
+  // Función helper para construir URLs con filtros combinados
+  const buildFilterUrl = (newParam: string, newValue: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set(newParam, newValue);
+    return `/catalogo?${params.toString()}`;
+  };
+
+  // Verificar si hay filtros activos
+  const hasActiveFilters =
+    searchParams.has("sexo") || searchParams.has("categoriaId");
+
+  useEffect(() => {
+    const cargarCategorias = async () => {
+      try {
+        const respuesta = await obtenerCategorias();
+        if (respuesta.success) {
+          setCategorias((respuesta as Response<CategoriaResponse[]>).data);
+        }
+      } catch (error) {
+        console.error("Error al cargar categorías:", error);
+      }
+    };
+    cargarCategorias();
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-12">
         {/* Logo */}
         <div className="shrink-0">
-          <a
-            href="#"
+          <Link
+            to={"/"}
             className="text-xl font-extrabold tracking-tighter uppercase italic"
           >
             Prime<span className="text-primary">Drip</span>Club
-          </a>
+          </Link>
         </div>
 
         {/* Navigation Links & Search */}
         <div className="flex flex-1 items-center justify-end gap-5">
           <div className="flex items-center gap-6">
-            <a
-              href="#"
+            <Link
+              to={"/"}
               className="text-[10px] font-bold uppercase tracking-[0.2em] hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
             >
-              Nuevos
-            </a>
-            <a
-              href="#"
+              Destacados
+            </Link>
+            <Link
+              to={buildFilterUrl("sexo", "Hombre")}
               className="text-[10px] font-bold uppercase tracking-[0.2em] hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
             >
               Hombre
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to={buildFilterUrl("sexo", "Mujer")}
               className="text-[10px] font-bold uppercase tracking-[0.2em] hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
             >
               Mujer
-            </a>
+            </Link>
 
             {/* Categories Dropdown */}
             <div className="relative group">
               <button className="text-[10px] font-bold uppercase tracking-[0.2em] hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
                 Categorías
-                <span className="material-symbols-outlined text-[14px]">
-                  expand_more
-                </span>
               </button>
               {/* menu desplegable para categorias */}
-              <div className="absolute top-full left-0 pt-4 hidden group-hover:block">
-                <ul className="bg-white dark:bg-zinc-900 border rounded-[10px] border-zinc-200 dark:border-zinc-800 p-4 w-48 shadow-2xl">
-                  <li className="py-2">
-                    <Link
-                      to={""}
-                      className="text-[10px] uppercase tracking-widest hover:text-primary block px-2 py-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                    >
-                      Relojes
-                    </Link>
-                  </li>
-                  <li className="py-2">
-                    <Link
-                      to={""}
-                      className="text-[10px] uppercase tracking-widest hover:text-primary block px-2 py-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                    >
-                      Tenis
-                    </Link>
-                  </li>
+              <div className="absolute top-full left-0 pt-4 hidden group-hover:block z-50">
+                <ul className="bg-white dark:bg-zinc-900 border-2 rounded-lg border-zinc-200 dark:border-zinc-700 p-3 w-56 shadow-xl">
+                  {categorias.length > 0 ? (
+                    categorias.map((categoria) => (
+                      <li key={categoria.id} className="mb-1">
+                        <Link
+                          to={buildFilterUrl(
+                            "categoriaId",
+                            categoria.id.toString(),
+                          )}
+                          className="text-xs font-semibold uppercase tracking-wider hover:text-primary block px-4 py-3 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all"
+                        >
+                          {categoria.nombre}
+                        </Link>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="px-4 py-3 text-xs text-zinc-400">
+                      No hay categorías disponibles
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>
+
+            {/* Botón Limpiar Filtros */}
+            {hasActiveFilters && (
+              <Link
+                to="/catalogo"
+                className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500 hover:text-red-600 transition-colors cursor-pointer flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-[14px]">
+                  filter_alt_off
+                </span>
+                Limpiar filtros
+              </Link>
+            )}
           </div>
           {/* Search Bar */}
           <div className="relative w-full max-w-50">

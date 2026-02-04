@@ -28,6 +28,14 @@ export default function ProductTableSkeleton() {
           <td className="px-6 py-4">
             <div className="h-6 bg-neutral-200 dark:bg-zinc-800 rounded w-24"></div>
           </td>
+          {/* Etiqueta */}
+          <td className="px-6 py-4">
+            <div className="h-6 bg-neutral-200 dark:bg-zinc-800 rounded-full w-20"></div>
+          </td>
+          {/* Sexo */}
+          <td className="px-6 py-4">
+            <div className="h-6 bg-neutral-200 dark:bg-zinc-800 rounded-full w-20"></div>
+          </td>
           {/* Estado */}
           <td className="px-6 py-4">
             <div className="h-6 bg-neutral-200 dark:bg-zinc-800 rounded-full w-20"></div>
