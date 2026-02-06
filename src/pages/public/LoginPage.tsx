@@ -5,7 +5,7 @@ import { useToast } from "../../hooks/useToast";
 import type { Response } from "../../types/requestType/common/Response";
 import type { LoginResponse } from "../../types/requestType/usuario/LoginResponse";
 import type { ErrorResponse } from "../../types/requestType/common/ErrorResponse";
-import { SaveinfoLogin } from "../../utils/SaveinfoLogin";
+import { SaveinfoLogin } from "../../utils";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function LoginPage() {

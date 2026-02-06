@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { url_backend_image } from "../../Config";
 import type { ProductCardProps } from "../../types/TypeProps/ProductCardProps";
 
@@ -5,8 +6,14 @@ export default function ProductCard({
   product,
   showAddToCart = false,
 }: ProductCardProps) {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/producto/${product.id}`);
+  };
+
   return (
-    <div className="group cursor-pointer">
+    <div className="group cursor-pointer" onClick={handleCardClick}>
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-900 mb-4 rounded-lg">
         {/* Image Placeholder */}

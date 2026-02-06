@@ -2,8 +2,20 @@ import { url_backend_image } from "../../../Config";
 import type { ProductTableRowProps } from "../../../types/TypeProps/ProductTableRowProps";
 
 function ProductTableRow(props: ProductTableRowProps) {
-  const { product, id, onEdit, onDelete, getStockColor, getStatusDisplay } = props;
+  const {
+    product,
+    id,
+    onEdit,
+    onDelete,
+    getStockColor,
+    getStatusDisplay,
+    categories,
+  } = props;
   const statusInfo = getStatusDisplay(product.activo, product.stock);
+
+  // Buscar el nombre de la categoría
+  const categoria = categories.find((cat) => cat.id === product.categoriaId);
+  const categoriaNombre = categoria ? categoria.nombre : "Sin categoría";
 
   return (
     <tr
@@ -36,6 +48,11 @@ function ProductTableRow(props: ProductTableRowProps) {
       <td className="px-6 py-4 text-sm">
         <span className={`px-2.5 py-1 rounded ${getStockColor(product.stock)}`}>
           {product.stock} unidades
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-400">
+          {categoriaNombre}
         </span>
       </td>
       <td className="px-6 py-4">

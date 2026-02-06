@@ -29,10 +29,10 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
       label: "Panel Principal",
     },
     {
-      id: "productos",
-      path: "/productos",
+      id: "inventario",
+      path: "/inventario",
       icon: "shopping_bag",
-      label: "Productos",
+      label: "Inventario",
     },
     {
       id: "pedidos",

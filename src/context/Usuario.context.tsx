@@ -1,7 +1,6 @@
 import { createContext, type ReactNode } from "react";
-import { ApiRequest } from "../utils/ApiRequest";
-import {url_backend} from "../Config";
-import { getHeaders } from "../utils/Headers";
+import { ApiRequest, getHeaders } from "../utils";
+import { url_backend } from "../Config";
 import type { Usuario } from "../types/requestType/Usuario";
 import type { UsuarioContextType } from "../types/ContextType/UsuarioContextType";
 import type { LoginRequest } from "../types/requestType/usuario/LoginRequest";

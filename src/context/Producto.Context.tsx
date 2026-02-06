@@ -1,10 +1,10 @@
 import { createContext, type ReactNode } from "react";
 import type { ProductoContextType } from "../types/ContextType/ProductoContextType";
-import { ApiRequest } from "../utils/ApiRequest";
+import { ApiRequest } from "../utils";
 import type { ProductoResponse } from "../types/requestType/producto/ProductoResponse";
 import type { ProductoRequest } from "../types/requestType/producto/ProductoRequest";
-import {url_backend} from "../Config";
-import { getAuthHeaders, getHeaders } from "../utils/Headers";
+import { url_backend } from "../Config";
+import { getAuthHeaders, getHeaders } from "../utils";
 import { useAuth } from "../hooks/useAuth";
 import type { ProductUpdateData } from "../types/product";
 
@@ -48,7 +48,6 @@ function ProductoProvider({ children }: { children: ReactNode }) {
   };
 
   const obtenerProductosActivos = async () => {
-    
     const respuesta = await ApiRequest<ProductoResponse[], null>(
       `${url_backend}/productos/activos`,
       {
@@ -58,29 +57,26 @@ function ProductoProvider({ children }: { children: ReactNode }) {
     );
 
     return respuesta;
-  }
+  };
 
   const actualizarProductos = async (producto: ProductUpdateData) => {
-    
     if (!isAuthenticated || !user) {
       throw new Error("Usuario no autenticado");
     }
 
     const respuesta = await ApiRequest<ProductoResponse, ProductUpdateData>(
-      (
-        `${url_backend}/productos/${producto.id}`
-      ),{
+      `${url_backend}/productos/${producto.id}`,
+      {
         method: "PUT",
         headers: getAuthHeaders(user.token),
         body: producto,
-      }
+      },
     );
 
     return respuesta;
-   }
+  };
 
-   const eliminarProducto = async (id:number) => {
-    
+  const eliminarProducto = async (id: number) => {
     if (!isAuthenticated || !user) {
       throw new Error("Usuario no autenticado");
     }
@@ -94,10 +90,18 @@ function ProductoProvider({ children }: { children: ReactNode }) {
     );
 
     return respuesta;
-   }
+  };
 
   return (
-    <ProductoContext.Provider value={{ guardarProducto, obtenerProductos, actualizarProductos, obtenerProductosActivos, eliminarProducto }}>
+    <ProductoContext.Provider
+      value={{
+        guardarProducto,
+        obtenerProductos,
+        actualizarProductos,
+        obtenerProductosActivos,
+        eliminarProducto,
+      }}
+    >
       {children}
     </ProductoContext.Provider>
   );

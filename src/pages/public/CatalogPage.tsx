@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router";
 import { PublicLayout } from "../../components"
-import CatalogProducts from "../../components/catalog/CatalogProduct"
+import { CatalogProducts } from "../../components";
 import { useProductosActivos } from "../../hooks/useProductosActivos"
 
 

@@ -5,16 +5,18 @@ import RegisterPage from "../pages/public/RegisterPage";
 import Dashboard from "../pages/Private/Dashboard";
 import UnauthorizedPage from "../pages/public/UnauthorizedPage";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
-import ProductosPage from "../pages/Private/ProductosPage";
+import ProductosPage from "../pages/Private/InventarioPage";
 import PedidosPage from "../pages/Private/PedidosPage";
 import VentasPage from "../pages/Private/VentasPage";
 import CatalogPage from "../pages/public/CatalogPage";
+import { ProductDetailPage } from "../pages/public/ProductDetailPage";
 
 export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Homepage />} />
       <Route path="/catalogo" element={<CatalogPage />} />
+      <Route path="/producto/:id" element={<ProductDetailPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
@@ -32,7 +34,7 @@ export const AppRoutes = () => {
       />
 
       <Route
-        path="/productos"
+        path="/inventario"
         element={
           <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
             <ProductosPage />
@@ -44,7 +46,7 @@ export const AppRoutes = () => {
         path="/pedidos"
         element={
           <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
-            <PedidosPage/>
+            <PedidosPage />
           </ProtectedRoute>
         }
       />

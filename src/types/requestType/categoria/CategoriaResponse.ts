@@ -5,5 +5,4 @@ export interface CategoriaResponse {
   id: number;
   nombre: string;
   descripcion: string;
-  fechaCreacion: string; // ISO 8601 format
 }

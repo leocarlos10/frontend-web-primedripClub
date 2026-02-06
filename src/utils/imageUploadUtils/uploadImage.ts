@@ -1,6 +1,6 @@
-import {url_backend} from "../Config";
-import type { LoginResponse } from "../types/requestType/usuario/LoginResponse";
-import type { Response } from "../types/requestType/common/Response";
+import { url_backend } from "../../Config";
+import type { LoginResponse } from "../../types/requestType/usuario/LoginResponse";
+import type { Response } from "../../types/requestType/common/Response";
 
 /**
  * Envia la imagen al backend para ser guardada
@@ -20,7 +20,6 @@ export const saveImage = async (
   isAuthenticated: boolean,
   user: LoginResponse,
 ): Promise<string | undefined> => {
-  
   const formData = new FormData();
   formData.append("image", file);
   let token;
