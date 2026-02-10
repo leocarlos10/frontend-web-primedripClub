@@ -2,6 +2,7 @@ import { Link, useSearchParams } from "react-router";
 import { useDarkMode } from "../../hooks/useDarkMode";
 import { useAuth } from "../../hooks/useAuth";
 import { useCategoria } from "../../hooks/useCategoria";
+import { useCarrito } from "../../hooks/useCarrito";
 import { useState, useEffect } from "react";
 import type { CategoriaResponse } from "../../types/requestType/categoria/CategoriaResponse";
 import type { Response } from "../../types/requestType/common/Response";
@@ -10,8 +11,10 @@ export default function Header() {
   const { isDark, toggleDarkMode } = useDarkMode();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { obtenerCategorias } = useCategoria();
+  const { obtenerCantidadTotal } = useCarrito();
   const [categorias, setCategorias] = useState<CategoriaResponse[]>([]);
   const [searchParams] = useSearchParams();
+  const cantidadCarrito = obtenerCantidadTotal();
 
   // Función helper para construir URLs con filtros combinados
   const buildFilterUrl = (newParam: string, newValue: string) => {
@@ -181,14 +184,19 @@ export default function Header() {
               </ul>
             </div>
           </div>
-          <button className="hover:text-primary transition-colors relative flex items-center">
+          <Link
+            to="/carrito"
+            className="hover:text-primary transition-colors relative flex items-center"
+          >
             <span className="material-symbols-outlined text-[22px]">
               shopping_bag
             </span>
-            <span className="absolute -top-1.5 -right-1.5 bg-primary text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-              2
-            </span>
-          </button>
+            {cantidadCarrito > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-primary text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                {cantidadCarrito}
+              </span>
+            )}
+          </Link>
           <button
             className="hover:text-primary transition-colors flex items-center cursor-pointer"
             onClick={toggleDarkMode}

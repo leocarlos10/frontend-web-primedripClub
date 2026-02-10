@@ -10,6 +10,7 @@ import PedidosPage from "../pages/Private/PedidosPage";
 import VentasPage from "../pages/Private/VentasPage";
 import CatalogPage from "../pages/public/CatalogPage";
 import { ProductDetailPage } from "../pages/public/ProductDetailPage";
+import { CartPage } from "../pages/public/CartPage";
 
 export const AppRoutes = () => {
   return (
@@ -17,6 +18,7 @@ export const AppRoutes = () => {
       <Route path="/" element={<Homepage />} />
       <Route path="/catalogo" element={<CatalogPage />} />
       <Route path="/producto/:id" element={<ProductDetailPage />} />
+      <Route path="/carrito" element={<CartPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />

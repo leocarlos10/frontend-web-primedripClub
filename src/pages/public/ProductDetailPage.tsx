@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import { useProductosActivos } from "../../hooks/useProductosActivos";
 import { useCategoria } from "../../hooks/useCategoria";
 import { useToast } from "../../hooks/useToast";
+import { useCarrito } from "../../hooks/useCarrito";
 import type { CatalogProduct } from "../../types/product";
 import type { CategoriaResponse } from "../../types/requestType/categoria/CategoriaResponse";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
@@ -15,6 +16,7 @@ export const ProductDetailPage = () => {
   const { productos, isLoading } = useProductosActivos();
   const { obtenerCategorias } = useCategoria();
   const { showToast } = useToast();
+  const { agregarAlCarrito } = useCarrito();
 
   const [product, setProduct] = useState<CatalogProduct | null>(null);
   const [category, setCategory] = useState<CategoriaResponse | null>(null);
@@ -26,8 +28,7 @@ export const ProductDetailPage = () => {
   // Secciones desplegables
   const [openSections, setOpenSections] = useState({
     description: true,
-    materials: false,
-    shipping: false,
+    shipping: true,
   });
 
   // Cargar categorías
@@ -46,7 +47,7 @@ export const ProductDetailPage = () => {
     if (isLoading) {
       return;
     }
-
+    // si no hay productos redirigir al catálogo
     if (!id) {
       navigate("/catalogo");
       return;
@@ -73,6 +74,7 @@ export const ProductDetailPage = () => {
     }
   }, [id, productos, categorias, isLoading]);
 
+  /* esta funcion se encarga de mostrar o ocultar secciones desplegables */
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections((prev) => ({
       ...prev,
@@ -80,6 +82,9 @@ export const ProductDetailPage = () => {
     }));
   };
 
+  /* este es el evento que se encarga de 
+  gestionar la adición de un producto al carrito
+  */
   const handleAddToCart = () => {
     if (!product) return;
 
@@ -93,10 +98,11 @@ export const ProductDetailPage = () => {
       return;
     }
 
-    // TODO: Implementar lógica de carrito
-    showToast(`${quantity} unidad(es) agregadas al carrito`, "success");
+    agregarAlCarrito(product, quantity);
   };
 
+  /* este es el evento que se encarga de gestionar 
+  la compra inmediata de un producto */
   const handleBuyNow = () => {
     if (!product) return;
 
@@ -247,7 +253,11 @@ export const ProductDetailPage = () => {
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   disabled={isOutOfStock}
-                  className="w-12 h-12 border border-zinc-300 dark:border-zinc-600 flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-bold"
+                  className="w-12 h-12 border border-zinc-300 
+                  dark:border-zinc-600 flex items-center justify-center 
+                  hover:bg-zinc-100 dark:hover:bg-zinc-800 
+                  disabled:opacity-50 disabled:cursor-not-allowed 
+                  transition-colors text-lg font-bold cursor-pointer"
                 >
                   -
                 </button>
@@ -270,7 +280,7 @@ export const ProductDetailPage = () => {
                     setQuantity(Math.min(product.stock, quantity + 1))
                   }
                   disabled={isOutOfStock || quantity >= product.stock}
-                  className="w-12 h-12 border border-zinc-300 dark:border-zinc-600 flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-bold"
+                  className="w-12 h-12 border border-zinc-300 dark:border-zinc-600 flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-bold cursor-pointer"
                 >
                   +
                 </button>
@@ -282,14 +292,14 @@ export const ProductDetailPage = () => {
               <button
                 onClick={handleAddToCart}
                 disabled={isOutOfStock}
-                className="w-full bg-primary hover:bg-primary/90 disabled:bg-zinc-300 dark:disabled:bg-zinc-700 text-white font-bold py-4 px-6 transition-colors disabled:cursor-not-allowed uppercase text-xs tracking-widest"
+                className="w-full bg-primary hover:bg-primary/90 disabled:bg-zinc-300 dark:disabled:bg-zinc-700 text-white font-bold py-4 px-6 transition-colors disabled:cursor-not-allowed uppercase text-xs tracking-widest cursor-pointer"
               >
                 {isOutOfStock ? "Agotado" : "Agregar al carrito"}
               </button>
               <button
                 onClick={handleBuyNow}
                 disabled={isOutOfStock}
-                className="w-full bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-100 disabled:bg-zinc-300 dark:disabled:bg-zinc-700 text-white dark:text-zinc-900 font-bold py-4 px-6 transition-colors disabled:cursor-not-allowed uppercase text-xs tracking-widest"
+                className="w-full bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-100 disabled:bg-zinc-300 dark:disabled:bg-zinc-700 text-white dark:text-zinc-900 font-bold py-4 px-6 transition-colors disabled:cursor-not-allowed uppercase text-xs tracking-widest cursor-pointer"
               >
                 {isOutOfStock ? "No disponible" : "Comprar ahora"}
               </button>
@@ -301,12 +311,12 @@ export const ProductDetailPage = () => {
               <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
                 <button
                   onClick={() => toggleSection("description")}
-                  className="w-full flex items-center justify-between text-left"
+                  className="w-full flex items-center justify-between text-left cursor-pointer"
                 >
                   <span className="text-xs font-bold uppercase tracking-widest">
                     Descripción
                   </span>
-                  <span className="material-symbols-outlined text-zinc-500 dark:text-zinc-400">
+                  <span className="material-symbols-outlined text-zinc-500 dark:text-zinc-400 cursor-pointer">
                     {openSections.description
                       ? "keyboard_arrow_up"
                       : "keyboard_arrow_down"}
@@ -319,41 +329,16 @@ export const ProductDetailPage = () => {
                 )}
               </div>
 
-              {/* Materiales & Cuidado */}
-              <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
-                <button
-                  onClick={() => toggleSection("materials")}
-                  className="w-full flex items-center justify-between text-left"
-                >
-                  <span className="text-xs font-bold uppercase tracking-widest">
-                    Materiales & Cuidado
-                  </span>
-                  <span className="material-symbols-outlined text-zinc-500 dark:text-zinc-400">
-                    {openSections.materials
-                      ? "keyboard_arrow_up"
-                      : "keyboard_arrow_down"}
-                  </span>
-                </button>
-                {openSections.materials && (
-                  <div className="mt-4 text-sm text-zinc-600 dark:text-zinc-400 space-y-2">
-                    <p>• Materiales de alta calidad para mayor durabilidad</p>
-                    <p>• Lavar a máquina en ciclo suave</p>
-                    <p>• No usar blanqueador</p>
-                    <p>• Secar a temperatura baja</p>
-                  </div>
-                )}
-              </div>
-
               {/* Envío & Devoluciones */}
               <div className="border-b border-zinc-200 dark:border-zinc-700 pb-4">
                 <button
                   onClick={() => toggleSection("shipping")}
-                  className="w-full flex items-center justify-between text-left"
+                  className="w-full flex items-center justify-between text-left cursor-pointer"
                 >
                   <span className="text-xs font-bold uppercase tracking-widest">
                     Envío & Devoluciones
                   </span>
-                  <span className="material-symbols-outlined text-zinc-500 dark:text-zinc-400">
+                  <span className="material-symbols-outlined text-zinc-500 dark:text-zinc-400 cursor-pointer">
                     {openSections.shipping
                       ? "keyboard_arrow_up"
                       : "keyboard_arrow_down"}
@@ -361,8 +346,8 @@ export const ProductDetailPage = () => {
                 </button>
                 {openSections.shipping && (
                   <div className="mt-4 text-sm text-zinc-600 dark:text-zinc-400 space-y-2">
-                    <p>• Envío gratis en pedidos superiores a $100,000 COP</p>
-                    <p>• Entrega en 3-5 días hábiles</p>
+                    <p>• Envío gratis en pedidos superiores a $600,000 COP</p>
+                    <p>• Entrega en 5-10 días hábiles</p>
                     <p>• Devoluciones gratuitas dentro de 30 días</p>
                     <p>• El producto debe estar sin usar y con etiquetas</p>
                   </div>

@@ -9,22 +9,25 @@ import { ToastProvider } from "./context/Toast.context.tsx";
 import { AuthProvider } from "./context/Auth.context.tsx";
 import { ProductoProvider } from "./context/Producto.Context.tsx";
 import { CategoriaProvider } from "./context/CategoriaContext.tsx";
+import { CarritoProvider } from "./context/Carrito.Context.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <ToastProvider>
-        <DarkModeProvider>
-          <UsuarioProvider>
-            <AuthProvider>
-              <ProductoProvider>
-                <CategoriaProvider>
-                  <App />
-                </CategoriaProvider>
-              </ProductoProvider>
-            </AuthProvider>
-          </UsuarioProvider>
-        </DarkModeProvider>
+        <CarritoProvider>
+          <DarkModeProvider>
+            <UsuarioProvider>
+              <AuthProvider>
+                <ProductoProvider>
+                  <CategoriaProvider>
+                    <App />
+                  </CategoriaProvider>
+                </ProductoProvider>
+              </AuthProvider>
+            </UsuarioProvider>
+          </DarkModeProvider>
+        </CarritoProvider>
       </ToastProvider>
     </BrowserRouter>
   </StrictMode>,
