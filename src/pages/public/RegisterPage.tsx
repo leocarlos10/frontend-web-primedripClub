@@ -3,13 +3,14 @@ import { useContext, useState } from "react";
 import { UsuarioContext } from "../../context/Usuario.context";
 import type { ErrorResponse } from "../../types/requestType/common/ErrorResponse";
 import type { Response } from "../../types/requestType/common/Response";
-import type { Usuario } from "../../types/requestType/Usuario";
+import type { Usuario } from "../../types/requestType/usuario/Usuario";
 import { useToast } from "../../hooks/useToast";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [telefono, setTelefono] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const context = useContext(UsuarioContext);
@@ -27,19 +28,19 @@ export default function RegisterPage() {
     // verificamos que el contexto no sea nulo
     if (!context) return;
 
-    console.log("Registrando usuario:", { name, email, password });
+    console.log("Registrando usuario:", { name, email, password, telefono });
     // llamamos a la función register del contexto
     const respuesta = await context.register({
       nombre: name,
       email: email,
       password: password,
+      telefono: telefono,
       activo: true,
       fechaCreacion: new Date().toISOString(),
     });
 
     if (respuesta.success) {
       showToast("Registro exitoso", "success");
-      console.log("Usuario registrado:", (respuesta as Response<Usuario>).data);
       navigate("/login");
     } else {
       showToast(
@@ -107,6 +108,24 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="email@ejemplo.com"
+                className="w-full bg-transparent border-b border-zinc-300 dark:border-white/30 focus:border-zinc-900 dark:focus:border-white transition-all duration-300 py-3 px-0 outline-none text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-white/20 "
+              />
+            </div>
+
+            {/* Teléfono Input */}
+            <div className="group">
+              <label
+                htmlFor="telefono"
+                className="block text-[10px] uppercase tracking-[0.2em] mb-3 font-medium text-zinc-500 dark:text-white/40 group-focus-within:text-zinc-900 dark:group-focus-within:text-white transition-colors"
+              >
+                Teléfono
+              </label>
+              <input
+                id="telefono"
+                type="tel"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                placeholder="+34 123 456 789"
                 className="w-full bg-transparent border-b border-zinc-300 dark:border-white/30 focus:border-zinc-900 dark:focus:border-white transition-all duration-300 py-3 px-0 outline-none text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-white/20 "
               />
             </div>

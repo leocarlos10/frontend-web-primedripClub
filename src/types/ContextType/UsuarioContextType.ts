@@ -1,6 +1,6 @@
 import type { ErrorResponse } from "../requestType/common/ErrorResponse";
 import type { Response } from "../requestType/common/Response";
-import type { Usuario } from "../requestType/Usuario";
+import type { Usuario } from "../requestType/usuario/Usuario";
 import type { LoginRequest } from "../requestType/usuario/LoginRequest";
 import type { LoginResponse } from "../requestType/usuario/LoginResponse";
 

@@ -14,21 +14,21 @@ import { CarritoProvider } from "./context/Carrito.Context.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <ToastProvider>
-        <CarritoProvider>
-          <DarkModeProvider>
-            <UsuarioProvider>
-              <AuthProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <CarritoProvider>
+            <DarkModeProvider>
+              <UsuarioProvider>
                 <ProductoProvider>
                   <CategoriaProvider>
                     <App />
                   </CategoriaProvider>
                 </ProductoProvider>
-              </AuthProvider>
-            </UsuarioProvider>
-          </DarkModeProvider>
-        </CarritoProvider>
-      </ToastProvider>
+              </UsuarioProvider>
+            </DarkModeProvider>
+          </CarritoProvider>
+        </ToastProvider>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
 );

@@ -24,6 +24,11 @@ if(!user_key_storage) {
   throw new Error("VITE_USER_KEY_STORAGE no esta definida en las variables de entorno");
 }
 
+const session_key_storage = import.meta.env.VITE_SESSION_KEY_STORAGE ;
+if(!session_key_storage) {
+  throw new Error("VITE_SESSION_KEY_STORAGE no esta definida en las variables de entorno");
+}
+
 
 export {
   url_backend,
@@ -31,4 +36,5 @@ export {
   cart_storage_key,
   secret_key,
   user_key_storage,
-};
+  session_key_storage,
+};  

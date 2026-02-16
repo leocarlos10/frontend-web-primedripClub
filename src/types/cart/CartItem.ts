@@ -1,5 +1,6 @@
 export interface CartItem {
   id: number;
+  detalleId? : number;
   nombre: string;
   marca: string;
   imagenUrl: string;

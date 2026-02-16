@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link} from "react-router";
 import { useContext, useState } from "react";
 import { UsuarioContext } from "../../context/Usuario.context";
 import { useToast } from "../../hooks/useToast";
@@ -14,15 +14,12 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const context = useContext(UsuarioContext);
   const { showToast } = useToast();
-  const navigate = useNavigate();
   const { refreshAuth } = useAuth();
   // Manejador del envío del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!context) return;
-
-    console.log("Iniciando sesión con:", { email, password });
 
     const respuesta = await context.login({
       email: email,
@@ -40,12 +37,12 @@ export default function LoginPage() {
         // primero se guarda la info en sessionStorage
         SaveinfoLogin((respuesta as Response<LoginResponse>).data);
         refreshAuth();
-        setTimeout(() => navigate("/dashboard"), 2000);
+        setTimeout(() => location.href = "/dashboard", 2000);
       } else {
         // primero se guarda la info en sessionStorage
         SaveinfoLogin((respuesta as Response<LoginResponse>).data);
         refreshAuth();
-        setTimeout(() => navigate("/"), 2000);
+        setTimeout(() => location.href = "/", 2000);
       }
     } else {
       showToast(

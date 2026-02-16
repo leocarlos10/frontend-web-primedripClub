@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, type ReactNode } from "react";
 import type { AuthContextType } from "../types/ContextType/AuthContextType";
 import type { LoginResponse } from "../types/requestType/usuario/LoginResponse";
-import { getSecureSessionItem, removeSecureSessionItem } from "../utils/";
+import { clearCartSessionStorage, getSecureSessionItem, removeSecureSessionItem } from "../utils/";
 import { user_key_storage } from "../Config";
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -41,9 +41,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     removeSecureSessionItem(user_key_storage);
+    clearCartSessionStorage();
     setUser(null);
     setIsAuthenticated(false);
     setIsAdmin(false);
+    location.href = "/";
   };
 
   const refreshAuth = () => {

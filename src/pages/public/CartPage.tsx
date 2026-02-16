@@ -120,7 +120,7 @@ export const CartPage = () => {
                       </div>
                       <button
                         className="text-[10px] uppercase tracking-widest text-zinc-500 hover:text-red-500 transition-colors flex items-center gap-2 cursor-pointer"
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => eliminarDelCarrito(item.id)}
                       >
                         <span className="material-symbols-outlined text-lg">
                           delete
@@ -198,7 +198,7 @@ export const CartPage = () => {
 
                 {/* Botón finalizar compra */}
                 <button className="w-full bg-white dark:bg-white text-black py-5 text-[11px] uppercase tracking-[0.3em] font-bold hover:bg-zinc-200 dark:hover:bg-zinc-200 transition-colors mb-8 cursor-pointer">
-                  Finalizar compra
+                  Generar pedido
                 </button>
 
                 {/* Info adicional */}

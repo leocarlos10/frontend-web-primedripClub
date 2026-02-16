@@ -173,14 +173,16 @@ export default function Header() {
                     mi perfil
                   </Link>
                 </li>
-                <li className="py-2">
-                  <button
-                    className="text-[11px] uppercase tracking-widest hover:text-red-500 block px-2 py-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
-                    onClick={logout}
-                  >
-                    cerrar sesión
-                  </button>
-                </li>
+                {isAuthenticated && (
+                  <li className="py-2">
+                    <button
+                      className="text-[11px] uppercase tracking-widest hover:text-red-500 block px-2 py-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                      onClick={logout}
+                    >
+                      cerrar sesión
+                    </button>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
