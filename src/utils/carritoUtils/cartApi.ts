@@ -104,12 +104,17 @@ export const carritoService = {
     cartSession: CartSession,
   ): Promise<Response<CarritoResponse> | ErrorResponse> => {
     try {
+      // antes de hacer la peticion creamos los parametros de la url con la informacion del carrito
+      const params = new URLSearchParams();
+      if (cartSession.carritoId) params.append("carritoId", String(cartSession.carritoId));
+      if (cartSession.usuarioId) params.append("usuarioId", String(cartSession.usuarioId));
+      if (cartSession.sessionId) params.append("sessionId", cartSession.sessionId);
+
       const response = await ApiRequest<CarritoResponse, CartSession>(
-        `${url_backend}/carrito`,
+        `${url_backend}/carrito?${params.toString()}`,
         {
           method: "GET",
           headers: getHeaders(),
-          body: cartSession,
         },
       );
 

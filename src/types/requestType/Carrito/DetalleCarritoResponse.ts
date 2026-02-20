@@ -6,5 +6,8 @@ export type DetalleCarritoResponse = {
   productoImagenUrl: string;
   cantidad: number;
   precioUnitario: number;
+  marca: string;
+  stock: number;
+  categoriaId: number;
   fechaAgregado: string;
 };

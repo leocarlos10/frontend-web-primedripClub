@@ -20,6 +20,8 @@ import {
 } from "../utils/carritoUtils";
 import { carritoService } from "../utils/carritoUtils/cartApi";
 import { useAuth } from "../hooks/useAuth";
+import type { CarritoResponse } from "../types/requestType/Carrito/CarritoResponse";
+import type { DetalleCarritoResponse } from "../types/requestType/Carrito/DetalleCarritoResponse";
 
 export const CarritoContext = createContext<CarritoContextType | null>(null);
 
@@ -64,8 +66,8 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
       // 2. si hay sesion en cache, cargarla y sincronizar con backend
       if (cachedSession) {
         setCartSession(cachedSession);
-         await syncWithBackend(cachedSession, cachedItems);
-         return;
+        await syncWithBackend(cachedSession, cachedItems);
+        return;
       }
 
       // 3. si no hay sesion, crear una nueva en backend y sincronizar cache (si hay)
@@ -75,8 +77,8 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-        // 4. si no hay nada en cache, crear sesión vacía en backend
-        await createCartAndSync([]); 
+      // 4. si no hay nada en cache, crear sesión vacía en backend
+      await createCartAndSync([]);
     } catch (error) {
       console.error("Error inicializando carrito:", error);
       showToast("Error al cargar carrito", "warning");
@@ -96,12 +98,14 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
       const response = await carritoService.obtenerCarrito(session);
 
       if (response.success && "data" in response && response.data) {
-        const backendItems = mapBackendToCartItems(response.data);
+        const backendItems = mapBackendToCartItems((response.data.items as DetalleCarritoResponse[]));
 
         // Comparar y actualizar si hay diferencias
-        if (JSON.stringify(backendItems) !== JSON.stringify(cachedItems)) {
+        if (backendItems !== cachedItems) {
           setItems(backendItems);
           saveCartToStorage(backendItems);
+        }else{
+          setItems(cachedItems);
         }
       }
     } catch (error) {
@@ -114,7 +118,6 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
    */
   const createCartAndSync = async (localItems: CartItem[]) => {
     try {
-
       const cartSession: CartSession = {
         usuarioId: user ? user.id : undefined,
         // sessionId se genera en backend si no hay usuarioId
@@ -151,8 +154,11 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
     session: CartSession,
     localItems: CartItem[],
   ) => {
-    
-    if((session.carritoId && (session.usuarioId || session.sessionId)) && localItems.length !== 0){
+    if (
+      session.carritoId &&
+      (session.usuarioId || session.sessionId) &&
+      localItems.length !== 0
+    ) {
       for (const item of localItems) {
         try {
           const detalleRequest: DetalleCarritoRequest = {
@@ -186,7 +192,6 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
    * Asegura que exista una sesión de carrito
    */
   const ensureCartSession = async (): Promise<CartSession | null> => {
-    
     if (cartSession) {
       return cartSession;
     }
@@ -196,7 +201,6 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
         usuarioId: user ? user.id : undefined,
       };
 
-    
       const response = await carritoService.inicializarCarrito(newCartSession);
 
       if (response.success && "data" in response && response.data) {
@@ -210,7 +214,7 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
         setCartSession(session);
         return session;
       } else {
-        console.error('❌ Error en respuesta del backend:', response);
+        console.error("❌ Error en respuesta del backend:", response);
       }
     } catch (error) {
       console.error("❌ Error creando sesión de carrito:", error);
@@ -222,20 +226,19 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
   /**
    * Convierte la respuesta del backend a CartItems
    */
-  const mapBackendToCartItems = (carritoResponse: any): CartItem[] => {
-    if (!carritoResponse.detalleCarrito) return [];
-
-    return carritoResponse.detalleCarrito.map((detalle: any) => ({
-      id: detalle.producto.productoId,
-      detalleId: detalle.detalleId,
-      nombre: detalle.producto.nombre,
-      marca: detalle.producto.marca,
-      imagenUrl: detalle.producto.imagenUrl,
-      precio: detalle.producto.precio,
-      cantidad: detalle.cantidad,
-      stock: detalle.producto.stock,
-      categoriaId: detalle.producto.categoriaId,
+  const mapBackendToCartItems = (items: DetalleCarritoResponse[]): CartItem[] => {
+    return items.map((item) => ({
+      id: item.id,
+      detalleId: item.id,
+      nombre: item.productoNombre,
+      marca: item.marca,
+      imagenUrl: item.productoImagenUrl,
+      precio: item.precioUnitario,
+      cantidad: item.cantidad,
+      stock: item.stock,
+      categoriaId: item.categoriaId,
     }));
+
   };
 
   /**
@@ -245,7 +248,6 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
     product: CatalogProduct,
     cantidad: number,
   ) => {
-
     // Validar stock
     const stockValidation = validateStock(cantidad, product.stock);
     if (!stockValidation.valid) {
@@ -272,7 +274,9 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
       const session = await ensureCartSession();
 
       if (!session) {
-        console.error("como no se pudo obtener una sesion no se puede agregar al carrito");
+        console.error(
+          "como no se pudo obtener una sesion no se puede agregar al carrito",
+        );
         return;
       }
 
@@ -304,7 +308,8 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
           precioUnitario: product.precio,
         };
 
-        const response = await carritoService.guardarProductoEnCarrito(detalleRequest);
+        const response =
+          await carritoService.guardarProductoEnCarrito(detalleRequest);
 
         if (response.success && "data" in response && response.data) {
           // Actualizar con detalleId
@@ -316,8 +321,9 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
             ),
           );
         } else if ("message" in response) {
-          console.error(response.message)
-          showToast("Tenemos problemas en nuestro servidor, intentelo mas tarde",
+          console.error(response.message);
+          showToast(
+            "Tenemos problemas en nuestro servidor, intentelo mas tarde",
             "warning",
           );
           // Mantener en cache aunque falle el backend
@@ -335,7 +341,6 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
    * Elimina un producto del carrito (cache + backend)
    */
   const eliminarDelCarrito = async (productId: number) => {
-    
     const item = items.find((i) => i.id === productId);
     if (!item) return;
 
@@ -374,7 +379,6 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
    * Actualiza la cantidad de un producto (cache + backend)
    */
   const actualizarCantidad = async (productId: number, cantidad: number) => {
-    
     const item = items.find((i) => i.id === productId);
     if (!item) return;
 
