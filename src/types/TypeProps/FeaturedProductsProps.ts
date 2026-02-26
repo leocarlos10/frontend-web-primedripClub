@@ -1,7 +1,7 @@
-import type { Product } from "../product";
+import type { CatalogProduct } from "../product";
 
 export type FeaturedProductsProps = {
-  products: Product[];
+  products: CatalogProduct[];
   isLoading?: boolean;
   error?: string;
   onRetry?: () => void;

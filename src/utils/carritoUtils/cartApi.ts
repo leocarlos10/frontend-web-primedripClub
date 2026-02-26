@@ -201,4 +201,34 @@ export const carritoService = {
       } as ErrorResponse;
     }
   },
+
+  actualizarCarrito: async (carritoId: Number, usuarioId: Number) => {
+      try {
+         const params = new URLSearchParams();
+         if(carritoId) params.append("carritoId", String(carritoId));
+         if(usuarioId) params.append("usuarioId", String(usuarioId));
+
+         const response = await ApiRequest<CarritoResponse, void>(
+          `${url_backend}/carrito?${params.toString()}`,
+          {
+            method: "PUT",
+            headers: getHeaders(),
+          },
+        );
+
+        if (response.success) {
+          return response as Response<CarritoResponse>;
+        } else {
+          return response as ErrorResponse;
+        }
+        
+      } catch (error) {
+        console.error("Error al actualizar el carrito:", error);
+        return {
+          success: false,
+          message: "Error al actualizar el carrito",
+        } as ErrorResponse;
+        
+      }
+  }
 };

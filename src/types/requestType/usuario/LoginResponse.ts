@@ -1,5 +1,6 @@
 export type LoginResponse = {
     id:number;
+    carritoId:number;
     nombre:string;
     email:string;
     roles:string[];

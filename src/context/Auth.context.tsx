@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, type ReactNode } from "react";
 import type { AuthContextType } from "../types/ContextType/AuthContextType";
 import type { LoginResponse } from "../types/requestType/usuario/LoginResponse";
-import { clearCartSessionStorage, getSecureSessionItem, removeSecureSessionItem } from "../utils/";
+import { clearCartSessionStorage, clearCartStorage, getSecureItem,  removeSecureItem,  } from "../utils/";
 import { user_key_storage } from "../Config";
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -18,8 +18,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const checkAuth = () => {
-    // getSecureSessionItem ya descifra y parsea el JSON, devuelve el objeto directamente
-    const info = getSecureSessionItem<LoginResponse>(user_key_storage);
+
+    const info = getSecureItem<LoginResponse>(user_key_storage);
 
     if (info) {
       try {
@@ -40,8 +40,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    removeSecureSessionItem(user_key_storage);
+    removeSecureItem(user_key_storage);
     clearCartSessionStorage();
+    clearCartStorage();
     setUser(null);
     setIsAuthenticated(false);
     setIsAdmin(false);

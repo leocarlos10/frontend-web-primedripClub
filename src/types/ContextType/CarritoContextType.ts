@@ -14,4 +14,5 @@ export interface CarritoContextType {
   /*  vaciarCarrito: () => Promise<void>; */
   obtenerTotal: () => number;
   obtenerCantidadTotal: () => number;
+  initializeCart: () => Promise<void>;
 }

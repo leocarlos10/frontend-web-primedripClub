@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
@@ -12,23 +11,21 @@ import { CategoriaProvider } from "./context/CategoriaContext.tsx";
 import { CarritoProvider } from "./context/Carrito.Context.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <ToastProvider>
-          <CarritoProvider>
-            <DarkModeProvider>
-              <UsuarioProvider>
-                <ProductoProvider>
-                  <CategoriaProvider>
-                    <App />
-                  </CategoriaProvider>
-                </ProductoProvider>
-              </UsuarioProvider>
-            </DarkModeProvider>
-          </CarritoProvider>
-        </ToastProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </StrictMode>,
+  <BrowserRouter>
+    <AuthProvider>
+      <ToastProvider>
+        <CarritoProvider>
+          <DarkModeProvider>
+            <UsuarioProvider>
+              <ProductoProvider>
+                <CategoriaProvider>
+                  <App />
+                </CategoriaProvider>
+              </ProductoProvider>
+            </UsuarioProvider>
+          </DarkModeProvider>
+        </CarritoProvider>
+      </ToastProvider>
+    </AuthProvider>
+  </BrowserRouter>,
 );

@@ -2,6 +2,10 @@
 @import "tailwindcss";
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   --color-primary: #d4af37;
@@ -52,7 +56,6 @@ body {
   color: var(--color-primary, #d4af37) !important;
   opacity: 1;
 }
-
 
 @keyframes slideIn {
   from {

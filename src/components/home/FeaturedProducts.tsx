@@ -1,7 +1,8 @@
 import ProductCard from "./ProductCard";
 import type { FeaturedProductsProps } from "../../types/TypeProps/FeaturedProductsProps";
+import { BlurFade } from "../ui/blur-fade";
 
-export default function FeaturedProducts({
+export default function   FeaturedProducts({
   products,
   isLoading = false,
   error,
@@ -96,18 +97,24 @@ export default function FeaturedProducts({
     <section className="max-w-7xl mx-auto px-6 py-16">
       {/* Header */}
       <div className="text-center mb-12">
+        <BlurFade delay={0.25}>
         <h2 className="text-3xl md:text-4xl font-black tracking-tighter uppercase mb-3">
           Destacados
         </h2>
+          </BlurFade>
+        <BlurFade delay={0.3}>
         <p className="text-sm text-zinc-500 dark:text-zinc-400 font-light tracking-wide">
           Selección curada de la semana
         </p>
+        </BlurFade>
       </div>
 
       {/* Products Grid - Mantiene el mismo diseño */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-        {featuredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} showAddToCart />
+        {featuredProducts.map((product, id) => (
+          <BlurFade key={product.id} delay={0.25 + id * 0.05} inView>
+            <ProductCard product={product} showAddToCart />
+          </BlurFade>
         ))}
       </div>
     </section>

@@ -364,7 +364,7 @@ export default function InventarioPage() {
 
             {/* Tabla de productos */}
             <div className="bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
-              <div className="overflow-x-auto max-h-[600px] overflow-y-auto hide-scrollbar">
+              <div className="overflow-x-auto max-h-150 overflow-y-auto hide-scrollbar">
                 <table className="w-full text-left border-collapse">
                   <thead className="sticky top-0 bg-neutral-50 dark:bg-zinc-800 z-10">
                     <tr className="border-b border-neutral-200 dark:border-zinc-800">
@@ -460,7 +460,7 @@ export default function InventarioPage() {
 
             {/* Tabla de categorías */}
             <div className="bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
-              <div className="overflow-x-auto max-h-[600px] overflow-y-auto hide-scrollbar">
+              <div className="overflow-x-auto max-h-150 overflow-y-auto hide-scrollbar">
                 <table className="w-full text-left border-collapse">
                   <thead className="sticky top-0 bg-neutral-50 dark:bg-zinc-800 z-10">
                     <tr className="border-b border-neutral-200 dark:border-zinc-800">

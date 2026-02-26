@@ -1,9 +1,9 @@
 import type { LoginResponse } from "../../types/requestType/usuario/LoginResponse";
-import { setSecureSessionItem } from "../cryptoUtils";
+import { setSecureItem } from "../cryptoUtils";
 import { user_key_storage } from "../../Config";
 
 /**
- * Guarda la información de login del usuario en sessionStorage de forma segura.
+ * Guarda la información de login del usuario en LocalStorage de forma segura.
  * @param info - Objeto con la información de login del usuario.
  * ejecuta una funcion que viene de cryptoUtils para guardar de forma segura
  * la informacion de inicio de sesion del usuario
@@ -12,5 +12,5 @@ import { user_key_storage } from "../../Config";
  * @returns void
  */
 export const SaveinfoLogin = (info: LoginResponse) => {
-  setSecureSessionItem(user_key_storage, info);
+  setSecureItem(user_key_storage, info);
 };

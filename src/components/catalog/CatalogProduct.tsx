@@ -1,5 +1,6 @@
 import ProductCard from "../home/ProductCard";
 import type { CatalogProduct } from "../../types/product";
+import { BlurFade } from "../ui/blur-fade";
 
 interface CatalogProductsProps {
   products: CatalogProduct[];
@@ -121,8 +122,10 @@ export default function CatalogProducts({
 
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} showAddToCart />
+        {products.map((product, id) => (
+          <BlurFade key={product.id} delay={0.25 + id * 0.05} className="w-full">
+            <ProductCard key={product.id} product={product} showAddToCart />
+          </BlurFade>
         ))}
       </div>
 

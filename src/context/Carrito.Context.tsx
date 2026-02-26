@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useState, useEffect, type ReactNode, cache } from "react";
 import type { CarritoContextType } from "../types/ContextType/CarritoContextType";
 import type { CartItem } from "../types/cart/CartItem";
 import type { CartSession } from "../types/requestType/Carrito/cartSession";
@@ -20,7 +20,6 @@ import {
 } from "../utils/carritoUtils";
 import { carritoService } from "../utils/carritoUtils/cartApi";
 import { useAuth } from "../hooks/useAuth";
-import type { CarritoResponse } from "../types/requestType/Carrito/CarritoResponse";
 import type { DetalleCarritoResponse } from "../types/requestType/Carrito/DetalleCarritoResponse";
 
 export const CarritoContext = createContext<CarritoContextType | null>(null);
@@ -63,17 +62,19 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
       const cachedItems = getCartFromStorage();
       const cachedSession = getCartSessionFromStorage();
 
-      // 2. si hay sesion en cache, cargarla y sincronizar con backend
-      if (cachedSession) {
-        setCartSession(cachedSession);
+      // 2. si hay sesion en cache, sincronizar con backend y luego actualizar la sesión local
+      if (cachedSession && 
+          cachedSession.carritoId && 
+         (cachedSession.usuarioId || cachedSession.sessionId)) {
         await syncWithBackend(cachedSession, cachedItems);
+        setCartSession(cachedSession);
         return;
       }
 
-      // 3. si no hay sesion, crear una nueva en backend y sincronizar cache (si hay)
+      // 3. si no hay sesion pero hay item en cache, crear un nuevo carrito en backend y sincronizar cache (si hay)
       if (cachedItems.length > 0) {
-        setItems(cachedItems);
         await createCartAndSync(cachedItems);
+        setItems(cachedItems);
         return;
       }
 
@@ -98,14 +99,25 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
       const response = await carritoService.obtenerCarrito(session);
 
       if (response.success && "data" in response && response.data) {
-        const backendItems = mapBackendToCartItems((response.data.items as DetalleCarritoResponse[]));
+        const backendItems = mapBackendToCartItems(
+          response.data.items as DetalleCarritoResponse[],
+        );
 
-        // Comparar y actualizar si hay diferencias
-        if (backendItems !== cachedItems) {
-          setItems(backendItems);
+        // comparamos en formato JSON para evitar problemas de referencia
+        if (JSON.stringify(backendItems) !== JSON.stringify(cachedItems)) {
           saveCartToStorage(backendItems);
-        }else{
+          setItems(backendItems);
+        } else {
           setItems(cachedItems);
+        }
+      }else if ("status" in response && response.status === 404) {
+        if(session.carritoId && session.usuarioId && (session.sessionId === undefined || session.sessionId === null)){ 
+         const responseActualizar = await carritoService.actualizarCarrito(session.carritoId, session.usuarioId);
+          if(responseActualizar.success){
+            console.log("Carrito actualizado correctamente en backend");
+          }
+        }else {
+          await createCartAndSync([]);
         }
       }
     } catch (error) {
@@ -132,15 +144,16 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
           sessionId: response.data.sessionId,
         };
 
+        // guardamos la sesion en el LocalStorage
         saveCartSessionToStorage(newSession);
-        // Relee del localStorage para asegurar persistencia inmediata
-        const persistedSession = getCartSessionFromStorage();
-        setCartSession(persistedSession || newSession);
 
-        // Sincronizar items locales al backend
-        if (localItems.length > 0 && newSession.carritoId) {
+        // Sincroniza items locales al backend si hay
+        if (localItems.length > 0 && newSession.carritoId && (newSession.usuarioId || newSession.sessionId)) {
           await syncLocalItemsToBackend(newSession, localItems);
         }
+
+        // Actualizar sesión en estado
+        setCartSession(newSession);
       }
     } catch (error) {
       console.error("Error creando carrito:", error);
@@ -183,8 +196,8 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // Actualizar items con detalleId
-      setItems([...localItems]);
       saveCartToStorage(localItems);
+      setItems([...localItems]);
     }
   };
 
@@ -192,8 +205,14 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
    * Asegura que exista una sesión de carrito
    */
   const ensureCartSession = async (): Promise<CartSession | null> => {
-    if (cartSession) {
-      return cartSession;
+    
+    const cachedSession = getCartSessionFromStorage();
+    
+    if (cachedSession 
+      && cachedSession.carritoId 
+      && (cachedSession.usuarioId || cachedSession.sessionId)) {
+        setCartSession(cachedSession);
+      return cachedSession;
     }
 
     try {
@@ -226,7 +245,9 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
   /**
    * Convierte la respuesta del backend a CartItems
    */
-  const mapBackendToCartItems = (items: DetalleCarritoResponse[]): CartItem[] => {
+  const mapBackendToCartItems = (
+    items: DetalleCarritoResponse[],
+  ): CartItem[] => {
     return items.map((item) => ({
       id: item.id,
       detalleId: item.id,
@@ -238,7 +259,6 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
       stock: item.stock,
       categoriaId: item.categoriaId,
     }));
-
   };
 
   /**
@@ -270,6 +290,7 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
       await actualizarCantidad(existingItem.id, newCantidad);
       showToast(`${cantidad} unidad(es) más agregadas al carrito`, "success");
     } else {
+
       // primero nos aseguramos de tener una sesión de carrito válida
       const session = await ensureCartSession();
 
@@ -293,7 +314,6 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
       };
 
       setItems((prevItems) => [...prevItems, newItem]);
-      showToast("Producto agregado al carrito", "success");
 
       // 3. Sincronizar con backend en segundo plano
       setIsSyncing(true);
@@ -320,6 +340,9 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
                 : item,
             ),
           );
+          // confirmacion de producto agregado al carrito
+          showToast("Producto agregado al carrito", "success");
+
         } else if ("message" in response) {
           console.error(response.message);
           showToast(
@@ -477,6 +500,7 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
     eliminarDelCarrito,
     actualizarCantidad,
     /* vaciarCarrito, */
+    initializeCart,
     obtenerTotal,
     obtenerCantidadTotal,
     isLoading,
