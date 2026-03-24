@@ -18,7 +18,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
     <div className="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-300 flex">
       <AdminSidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
-      <main className="flex-1 flex flex-col md:ml-64">
+      <main className="flex-1 flex flex-col md:ml-52">
         <AdminHeader title={title} onMenuClick={toggleSidebar} />
 
         <div className="p-8 flex-1">{children}</div>

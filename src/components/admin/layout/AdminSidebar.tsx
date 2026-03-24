@@ -60,30 +60,30 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`w-64 border-r border-slate-200 dark:border-zinc-800 flex flex-col fixed h-full bg-white dark:bg-background-dark z-50 transition-transform duration-300 ease-in-out ${
+        className={`w-52 border-r border-slate-200 dark:border-zinc-800 flex flex-col fixed h-full bg-white dark:bg-background-dark z-50 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
-        <div className="p-8 flex items-center gap-3">
-          <span className="text-xl font-extrabold tracking-tighter uppercase italic">
+        <div className="p-5 flex items-center gap-2">
+          <span className="text-base font-extrabold tracking-tight uppercase italic">
             Prime<span className="text-primary">Drip</span>Club
           </span>
         </div>
 
-        <nav className="flex-1 px-4 space-y-2 mt-4">
+        <nav className="flex-1 px-3 space-y-2 mt-2">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.id}
                 to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md transition-colors w-full text-left ${
+                className={`flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-md transition-colors w-full text-left ${
                   isActive
                     ? "bg-slate-100 dark:bg-white/5 text-slate-900 dark:text-white border-l-2 border-slate-900 dark:border-white"
                     : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5 border-l-2 border-transparent"
                 }`}
               >
-                <span className="material-symbols-outlined text-lg">
+                <span className="material-symbols-outlined text-[18px]">
                   {item.icon}
                 </span>
                 {item.label}
@@ -92,13 +92,13 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
           })}
         </nav>
 
-        <div className="p-6 mt-auto border-t border-slate-200 dark:border-zinc-800">
+        <div className="p-4 mt-auto border-t border-slate-200 dark:border-zinc-800">
           <div className="flex items-center gap-3">
             <button
               onClick={toggleUserMenu}
-              className="w-10 h-10 rounded-full bg-slate-200 dark:bg-zinc-800 flex items-center justify-center relative hover:bg-slate-300 dark:hover:bg-zinc-700 transition-colors"
+              className="w-9 h-9 rounded-full bg-slate-200 dark:bg-zinc-800 flex items-center justify-center relative hover:bg-slate-300 dark:hover:bg-zinc-700 transition-colors"
             >
-              <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 cursor-pointer">
+              <span className="material-symbols-outlined text-[18px] text-slate-600 dark:text-slate-400 cursor-pointer">
                 person
               </span>
 
@@ -131,7 +131,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
               )}
             </button>
             <div>
-              <p className="text-xs font-semibold dark:text-white wrap-break-word line-clamp-2 ">
+              <p className="text-[11px] font-semibold dark:text-white wrap-break-word line-clamp-2 ">
                 {isAuthenticated && isAdmin && user && user.email}
               </p>
             </div>
