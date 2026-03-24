@@ -18,7 +18,7 @@ export const useProductosActivos = () => {
       if (respuesta.success) {
         setProductos((respuesta as Response<ProductoResponse[]>).data);
       } else {
-        setError("No se pudieron cargar los productos");
+        setError((respuesta as Response<ProductoResponse[]>).message);
       }
     } catch (err) {
       setError("Error al cargar los productos");
