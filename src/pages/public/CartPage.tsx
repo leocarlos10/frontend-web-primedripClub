@@ -183,7 +183,7 @@ export const CartPage = () => {
                   </div>
 
                   {/* Código de promoción */}
-                  <div className="mb-10">
+                  {/* <div className="mb-10">
                     <label
                       className="block text-[9px] uppercase tracking-[0.2em] text-zinc-500 mb-4"
                       htmlFor="promo"
@@ -204,7 +204,7 @@ export const CartPage = () => {
                       </button>
                     </div>
                   </div>
-
+ */}
                   {/* Botón finalizar compra */}
                   <button className="w-full bg-white dark:bg-white text-black py-5 text-[11px] uppercase tracking-[0.3em] font-bold hover:bg-zinc-200 dark:hover:bg-zinc-200 transition-colors mb-8 cursor-pointer">
                     Generar pedido
