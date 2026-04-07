@@ -80,9 +80,6 @@ export default function SliderImg() {
                     <span className="text-2xl md:text-3xl font-bold text-primary drop-shadow-lg">
                       ${producto.precio.toLocaleString("es-CO")}
                     </span>
-                    <span className="text-white text-sm">
-                      Stock: {producto.stock}
-                    </span>
                   </div>
                   <Link
                     to={`/producto/${producto.id}`}
