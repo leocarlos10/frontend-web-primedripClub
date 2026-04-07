@@ -1,4 +1,4 @@
-import {  Hero, PublicLayout } from "../../components";
+import { PublicLayout, SliderImg } from "../../components";
 import { FeaturedProducts } from "../../components";
 import { useProductosActivos } from "../../hooks/useProductosActivos";
 
@@ -9,7 +9,7 @@ export default function HomePage() {
   const {productos,isLoading,error,refetch} = useProductosActivos();
   return (
     <PublicLayout>
-      <Hero />
+      < SliderImg/>
       <FeaturedProducts 
       products={productos}
       isLoading={isLoading}
