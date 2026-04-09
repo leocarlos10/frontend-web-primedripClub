@@ -12,6 +12,10 @@ export interface CarritoContextType {
   eliminarDelCarrito: (productId: number) => Promise<void>;
   actualizarCantidad: (productId: number, cantidad: number) => Promise<void>;
   /*  vaciarCarrito: () => Promise<void>; */
+  mergeAnonymousCartToUser: (
+    usuarioId: number,
+    carritoId: number,
+  ) => Promise<void>;
   obtenerTotal: () => number;
   obtenerCantidadTotal: () => number;
   initializeCart: () => Promise<void>;

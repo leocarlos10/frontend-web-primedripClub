@@ -1,17 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { PublicLayout } from "../../components";
 import { BlurFade } from "../../components/ui/blur-fade";
 import { useCarrito } from "../../hooks/useCarrito";
 import { url_backend_image } from "../../Config";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/useToast";
 
 export const CartPage = () => {
   const { items, actualizarCantidad, eliminarDelCarrito, obtenerTotal } =
     useCarrito();
-  const [promoCode, setPromoCode] = useState("");
+  /* const [promoCode, setPromoCode] = useState(""); */
   const subtotal = obtenerTotal();
   const costoEnvio = 0; // Gratis por ahora
   const total = subtotal + costoEnvio;
+
+  const { isAuthenticated} = useAuth();
+  const {showToast} = useToast();
+  const navigate = useNavigate();
+
 
   // actualiza la cantidad del producto en el carrito
   const updateQuantity = (id: number, delta: number) => {
@@ -33,6 +40,17 @@ export const CartPage = () => {
     price.toLocaleString("es-CO", {
       minimumFractionDigits: 0,
     }) + " COP";
+
+  const handleGenerarPedido = () => {
+    // antes de generar un pedido, se debe verificar que el usuario haya iniciado sesión
+    if (!isAuthenticated) {
+      showToast("Debes iniciar sesión para generar un pedido.", "info");
+      navigate("/login");
+      return;
+    }
+
+    
+  }
 
   return (
     <PublicLayout>
@@ -206,8 +224,10 @@ export const CartPage = () => {
                   </div>
  */}
                   {/* Botón finalizar compra */}
-                  <button className="w-full bg-white dark:bg-white text-black py-5 text-[11px] uppercase tracking-[0.3em] font-bold hover:bg-zinc-200 dark:hover:bg-zinc-200 transition-colors mb-8 cursor-pointer">
-                    Generar pedido
+                  <button className="w-full bg-white dark:bg-white text-black py-5 text-[11px] uppercase tracking-[0.3em] font-bold hover:bg-zinc-200 dark:hover:bg-zinc-200 transition-colors mb-8 cursor-pointer"
+                    onClick={handleGenerarPedido}
+                  >
+                    Continuar con el  pedido
                   </button>
 
                   {/* Info adicional */}

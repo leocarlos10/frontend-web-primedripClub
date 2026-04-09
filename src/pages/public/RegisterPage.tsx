@@ -2,8 +2,6 @@ import { Link, useNavigate } from "react-router";
 import { useContext, useState } from "react";
 import { UsuarioContext } from "../../context/Usuario.context";
 import type { ErrorResponse } from "../../types/requestType/common/ErrorResponse";
-import type { Response } from "../../types/requestType/common/Response";
-import type { Usuario } from "../../types/requestType/usuario/Usuario";
 import { useToast } from "../../hooks/useToast";
 import { BlurFade } from "../../components/ui/blur-fade";
 

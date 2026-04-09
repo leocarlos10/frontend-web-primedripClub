@@ -16,6 +16,7 @@ import {
   calculateItemCount,
   getCartSessionFromStorage,
   saveCartSessionToStorage,
+  createNewCartSession,
   /* clearCartSessionStorage */
 } from "../utils/carritoUtils";
 import { carritoService } from "../utils/carritoUtils/cartApi";
@@ -240,6 +241,74 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return null;
+  };
+
+  /**
+   * Fusiona items anonimos con el carrito del usuario logueado.
+   * - Si el usuario no tiene carrito, se convierte la sesion anonima.
+   * - Si existe carrito del usuario, se suman cantidades o se agregan items.
+   */
+  const mergeAnonymousCartToUser = async (
+    usuarioId: number,
+    carritoId: number,
+  ): Promise<void> => {
+    try {
+      const cachedItems = getCartFromStorage();
+      const cachedSession = getCartSessionFromStorage();
+
+      // Si no hay carrito anonimo o no hay items locales, solo actualizamos sesion
+      if (!cachedSession?.sessionId || cachedItems.length === 0) {
+        createNewCartSession(carritoId, usuarioId);
+        setCartSession({ carritoId, usuarioId });
+        return;
+      }
+
+      // Si el usuario no tiene carrito asignado, convertir el anonimo y salir
+      if (!carritoId) {
+        createNewCartSession(0, usuarioId);
+        setCartSession({ carritoId: cachedSession.carritoId, usuarioId });
+        return;
+      }
+
+      const userSession: CartSession = { carritoId, usuarioId };
+      const response = await carritoService.obtenerCarrito(userSession);
+
+      const existingByProductId = new Map<number, DetalleCarritoResponse>();
+      if (response.success && "data" in response && response.data) {
+        const existingItems = response.data.items as DetalleCarritoResponse[];
+        for (const item of existingItems) {
+          existingByProductId.set(item.productoId, item);
+        }
+      }
+
+      for (const cachedItem of cachedItems) {
+        const existing = existingByProductId.get(cachedItem.id);
+
+        if (existing) {
+          const newCantidad = existing.cantidad + cachedItem.cantidad;
+          await carritoService.actualizarCantidad({
+            productoId: cachedItem.id,
+            carritoId,
+            usuarioId,
+            cantidad: newCantidad,
+          });
+        } else {
+          await carritoService.guardarProductoEnCarrito({
+            carritoId,
+            usuarioId,
+            productoId: cachedItem.id,
+            cantidad: cachedItem.cantidad,
+            precioUnitario: cachedItem.precio,
+          });
+        }
+      }
+
+      createNewCartSession(carritoId, usuarioId);
+      clearCartStorage();
+      setCartSession({ carritoId, usuarioId });
+    } catch (error) {
+      console.error("Error fusionando carrito anonimo:", error);
+    }
   };
 
   /**
@@ -500,6 +569,7 @@ export const CarritoProvider = ({ children }: { children: ReactNode }) => {
     eliminarDelCarrito,
     actualizarCantidad,
     /* vaciarCarrito, */
+    mergeAnonymousCartToUser,
     initializeCart,
     obtenerTotal,
     obtenerCantidadTotal,

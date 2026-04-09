@@ -4,7 +4,7 @@ import { useToast } from "../../hooks/useToast";
 import type { Response } from "../../types/requestType/common/Response";
 import type { LoginResponse } from "../../types/requestType/usuario/LoginResponse";
 import type { ErrorResponse } from "../../types/requestType/common/ErrorResponse";
-import { clearCartSessionStorage, createNewCartSession, SaveinfoLogin } from "../../utils";
+import { clearCartSessionStorage, SaveinfoLogin } from "../../utils";
 import { useAuth } from "../../hooks/useAuth";
 import { BlurFade } from "../../components/ui/blur-fade";
 import { useCarrito } from "@/hooks/useCarrito";
@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const {initializeCart} = useCarrito();
+  const { initializeCart, mergeAnonymousCartToUser } = useCarrito();
   const {login} = useUsuarioContext();
   const { showToast } = useToast();
   const { refreshAuth } = useAuth();
@@ -54,10 +54,10 @@ export default function LoginPage() {
      } else {
        // guardamos la info en el localStorage
        SaveinfoLogin((respuesta as Response<LoginResponse>).data);
-       // creamos un nuevo cartSession
-       createNewCartSession(
-          (respuesta as Response<LoginResponse>).data.carritoId,
-         (respuesta as Response<LoginResponse>).data.id
+       // fusionamos carrito anonimo con el carrito del usuario
+       await mergeAnonymousCartToUser(
+         (respuesta as Response<LoginResponse>).data.id,
+         (respuesta as Response<LoginResponse>).data.carritoId,
        );
        // refrescamos la autenticación para que el contexto de Auth se actualice con la nueva información del usuario
        refreshAuth();
